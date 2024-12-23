@@ -74,6 +74,7 @@
     },
     "require-dev": {
         "symfony/stopwatch": "7.1.*",
-        "symfony/web-profiler-bundle": "7.1.*"
+        "symfony/web-profiler-bundle": "7.1.*",
+        "symplify/easy-coding-standard": "^12.5"
     }
 }
