@@ -15,3 +15,11 @@ services:
             $environment: "%kernel.environment%"
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    _instanceof:
+        App\Shared\Command\Sync\CommandHandler:
+            tags:
+                - { name: 'messenger.message_handler', bus: command.sync.bus }
+        App\Shared\Command\Async\CommandHandler:
+            tags:
+                - { name: 'messenger.message_handler', bus: command.async.bus }
