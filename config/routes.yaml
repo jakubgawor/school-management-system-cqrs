@@ -1,5 +1,5 @@
-controllers:
+user:
     resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+        path: ../src/Modules/User/Controller/
+        namespace: App\Modules\User\Controller
     type: attribute
