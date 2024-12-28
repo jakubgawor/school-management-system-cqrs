@@ -25,7 +25,7 @@ final class UserRegisterHandler implements CommandHandler
             $command->password,
         );
 
-        $verificationToken = $this->userVerificationTokenService->createVerificationToken($user->getId());
+        $verificationToken = $this->userVerificationTokenService->createVerificationToken($user);
 
         $this->userVerificationMailer->sendToken($user->getEmail(), $verificationToken->getToken());
     }

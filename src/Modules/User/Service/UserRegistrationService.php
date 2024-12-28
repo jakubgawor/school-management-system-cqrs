@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\User\Service;
 
 use App\Modules\User\Entity\User;
-use App\Modules\User\Exception\UserAlreadyExistsException;
+use App\Modules\User\Exception\UserAlreadyExists;
 use App\Modules\User\Factory\UserRegisterFactory;
 use App\Modules\User\Repository\UserRepository;
 
@@ -20,7 +20,7 @@ final class UserRegistrationService
     public function registerUser(string $email, string $password): User
     {
         if ($this->userRepository->findByEmail($email) !== null) {
-            throw new UserAlreadyExistsException();
+            throw new UserAlreadyExists();
         }
 
         $user = $this->userRegisterFactory->create($email, $password);
