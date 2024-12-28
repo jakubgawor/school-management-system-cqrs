@@ -31,9 +31,9 @@ final class UserController extends AbstractController
         requestBody: new RequestBody(
             required: true,
             content: new JsonContent(
-                required: ['username', 'password'],
+                required: ['email', 'password'],
                 properties: [
-                    new Property(property: 'username', description: 'Username', type: 'string'),
+                    new Property(property: 'email', description: 'Email address', type: 'email'),
                     new Property(property: 'password', description: 'Password', type: 'string'),
                 ],
                 type: 'object'

@@ -14,15 +14,15 @@ final class UserRepository
     ) {
     }
 
-    public function findByUsername(string $username): ?User
+    public function findByEmail(string $email): ?User
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
         return $queryBuilder
             ->select('u')
             ->from(User::class, 'u')
-            ->where('u.username = :username')
-            ->setParameter('username', $username)
+            ->where('u.email = :email')
+            ->setParameter('email', $email)
             ->getQuery()
             ->getOneOrNullResult();
     }

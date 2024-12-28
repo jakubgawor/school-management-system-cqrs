@@ -10,7 +10,7 @@ use App\Shared\Request\RequestInterface;
 final readonly class UserRegister implements RequestInterface
 {
     public function __construct(
-        public mixed $username,
+        public mixed $email,
         public mixed $password,
     ) {
     }
@@ -18,7 +18,7 @@ final readonly class UserRegister implements RequestInterface
     public function toCommand(): Command
     {
         return new Command(
-            $this->username,
+            $this->email,
             $this->password
         );
     }

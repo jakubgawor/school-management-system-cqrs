@@ -17,8 +17,8 @@ class User
     #[Column(type: Types::GUID)]
     private string $id;
 
-    #[Column(type: Types::STRING, length: 64)]
-    private string $username;
+    #[Column(type: Types::STRING, length: 64, unique: true)]
+    private string $email;
 
     #[Column(type: Types::STRING, length: 255)]
     private string $password;
@@ -31,12 +31,12 @@ class User
 
     public function __construct(
         string $id,
-        string $username,
+        string $email,
         string $password,
     ) {
         $this->id = $id;
-        $this->username = $username;
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->email = $email;
+        $this->password = $password;
         $this->createdAt = new DateTimeImmutable();
         $this->isVerified = false;
     }
@@ -46,9 +46,9 @@ class User
         return $this->id;
     }
 
-    public function getUsername(): string
+    public function getEmail(): string
     {
-        return $this->username;
+        return $this->email;
     }
 
     public function getPassword(): string

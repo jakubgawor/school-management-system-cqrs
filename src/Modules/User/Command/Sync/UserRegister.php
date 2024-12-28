@@ -9,7 +9,7 @@ use App\Shared\Command\Sync\Command;
 final readonly class UserRegister implements Command
 {
     public function __construct(
-        public string $username,
+        public string $email,
         public string $password,
     ) {
     }
