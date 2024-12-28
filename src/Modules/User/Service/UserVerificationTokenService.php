@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Service;
 
+use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\UserVerificationToken;
 use App\Modules\User\Repository\UserVerificationTokenRepository;
 use App\Shared\Ramsey\IdGenerator;
@@ -15,11 +16,11 @@ final class UserVerificationTokenService
     ) {
     }
 
-    public function createVerificationToken(string $userId): UserVerificationToken
+    public function createVerificationToken(User $user): UserVerificationToken
     {
         $verificationToken = new UserVerificationToken(
             IdGenerator::generate(),
-            $userId,
+            $user,
             $this->createTokenString(),
         );
 
