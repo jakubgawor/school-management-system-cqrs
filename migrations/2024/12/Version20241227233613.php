@@ -17,6 +17,8 @@ create table user (
     id char(36) not null,
     username varchar(64) not null,
     password varchar(255) not null,
+    created_at datetime not null,
+    is_verified boolean not null,
     primary key(id)
 )
 SQL

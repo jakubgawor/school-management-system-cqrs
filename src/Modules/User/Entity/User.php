@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Entity;
 
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -22,6 +23,12 @@ class User
     #[Column(type: Types::STRING, length: 255)]
     private string $password;
 
+    #[Column(type: Types::DATETIME_IMMUTABLE)]
+    private DateTimeImmutable $createdAt;
+
+    #[Column(type: Types::BOOLEAN)]
+    private bool $isVerified;
+
     public function __construct(
         string $id,
         string $username,
@@ -30,6 +37,8 @@ class User
         $this->id = $id;
         $this->username = $username;
         $this->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->createdAt = new DateTimeImmutable();
+        $this->isVerified = false;
     }
 
     public function getId(): string
@@ -45,5 +54,15 @@ class User
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
     }
 }
