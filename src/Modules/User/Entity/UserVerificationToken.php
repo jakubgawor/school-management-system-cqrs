@@ -4,21 +4,25 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Entity;
 
+use App\Modules\User\Repository\UserVerificationTokenRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToOne;
 
-#[Entity]
+#[Entity(repositoryClass: UserVerificationTokenRepository::class)]
 class UserVerificationToken
 {
     #[Id]
     #[Column(type: Types::GUID)]
     private string $id;
 
-    #[Column(type: Types::GUID)]
-    private string $userId;
+    #[OneToOne(targetEntity: User::class)]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    private User $user;
 
     #[Column(type: Types::STRING)]
     private string $token;
@@ -31,11 +35,11 @@ class UserVerificationToken
 
     public function __construct(
         string $id,
-        string $userId,
+        User $user,
         string $token,
     ) {
         $this->id = $id;
-        $this->userId = $userId;
+        $this->user = $user;
         $this->token = $token;
 
         $currentTime = new DateTimeImmutable();
@@ -48,9 +52,9 @@ class UserVerificationToken
         return $this->id;
     }
 
-    public function getUserId(): string
+    public function getUser(): User
     {
-        return $this->userId;
+        return $this->user;
     }
 
     public function getToken(): string
@@ -66,5 +70,10 @@ class UserVerificationToken
     public function getExpiresAt(): DateTimeImmutable
     {
         return $this->expiresAt;
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->expiresAt < new DateTimeImmutable();
     }
 }
