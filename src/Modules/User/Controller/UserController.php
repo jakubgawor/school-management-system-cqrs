@@ -33,7 +33,7 @@ final class UserController extends AbstractController
             content: new JsonContent(
                 required: ['email', 'password'],
                 properties: [
-                    new Property(property: 'email', description: 'Email address', type: 'email'),
+                    new Property(property: 'email', description: 'Email address', type: 'string', format: 'email'),
                     new Property(property: 'password', description: 'Password', type: 'string'),
                 ],
                 type: 'object'
