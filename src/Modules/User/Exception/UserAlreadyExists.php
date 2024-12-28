@@ -6,7 +6,7 @@ namespace App\Modules\User\Exception;
 
 use Exception;
 
-class UserAlreadyExistsException extends Exception
+class UserAlreadyExists extends Exception
 {
     public function __construct()
     {
