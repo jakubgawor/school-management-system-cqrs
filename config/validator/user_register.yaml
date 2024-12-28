@@ -1,6 +1,6 @@
 App\Modules\User\Request\V1\UserRegister:
   properties:
-    username:
+    email:
       - NotBlank:
           message: 'VALIDATION.MISSING'
       - Type:
