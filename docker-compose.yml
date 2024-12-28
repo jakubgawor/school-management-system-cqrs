@@ -16,6 +16,7 @@ services:
       - ./docker/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     links:
       - database
+      - mailpit
     ports:
       - '80:80'
 
@@ -32,6 +33,17 @@ services:
       MYSQL_ROOT_PASSWORD: 'root'
     ports:
       - '3307:3306'
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: 'mailpit'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    restart: on-failure
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
 volumes:
   mysql_data:
