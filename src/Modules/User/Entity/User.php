@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Entity;
 
+use App\Modules\User\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-#[Entity]
+#[Entity(repositoryClass: UserRepository::class)]
 class User implements PasswordAuthenticatedUserInterface
 {
     #[Id]
@@ -74,5 +75,10 @@ class User implements PasswordAuthenticatedUserInterface
     public function isVerified(): bool
     {
         return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): void
+    {
+        $this->isVerified = $isVerified;
     }
 }
