@@ -9,9 +9,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[Entity]
-class User
+class User implements PasswordAuthenticatedUserInterface
 {
     #[Id]
     #[Column(type: Types::GUID)]
@@ -29,14 +30,8 @@ class User
     #[Column(type: Types::BOOLEAN)]
     private bool $isVerified;
 
-    public function __construct(
-        string $id,
-        string $email,
-        string $password,
-    ) {
-        $this->id = $id;
-        $this->email = $email;
-        $this->password = $password;
+    public function __construct()
+    {
         $this->createdAt = new DateTimeImmutable();
         $this->isVerified = false;
     }
@@ -46,14 +41,29 @@ class User
         return $this->id;
     }
 
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getEmail(): string
     {
         return $this->email;
     }
 
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
     }
 
     public function getCreatedAt(): DateTimeImmutable
