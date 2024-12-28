@@ -19,4 +19,22 @@ final class UserVerificationTokenRepository
         $this->entityManager->persist($userVerificationToken);
         $this->entityManager->flush();
     }
+
+    public function findByToken(string $token): ?UserVerificationToken
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+
+        return $queryBuilder
+            ->select('t')
+            ->from(UserVerificationToken::class, 't')
+            ->where('t.token = :token')
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function remove(UserVerificationToken $token): void
+    {
+        $this->entityManager->remove($token);
+    }
 }
