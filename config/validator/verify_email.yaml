@@ -1,0 +1,12 @@
+App\Modules\User\Request\V1\VerifyEmail:
+  properties:
+    token:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Length:
+          min: 64
+          max: 64
+          exactMessage: 'VALIDATION.INVALID_TOKEN_LENGTH'
