@@ -27,6 +27,20 @@ final class UserRepository
             ->getOneOrNullResult();
     }
 
+    public function findNotVerifiedByEmail(string $email): ?User
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+
+        return $queryBuilder
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.email = :email')
+            ->andWhere('u.isVerified = false')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function save(User $user): void
     {
         $this->entityManager->persist($user);

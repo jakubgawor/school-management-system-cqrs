@@ -39,7 +39,7 @@ final class VerifyEmailHandler implements CommandHandler
 
     private function getUserOrFail(string $email): User
     {
-        $user = $this->userRepository->findByEmail($email);
+        $user = $this->userRepository->findNotVerifiedByEmail($email);
         if (! $user) {
             throw new UserNotFound();
         }
