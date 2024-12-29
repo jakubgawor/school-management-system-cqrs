@@ -35,12 +35,6 @@ SQL
     {
         $this->addSql(
             <<<SQL
-drop index IDX_user_id on user
-SQL
-        );
-
-        $this->addSql(
-            <<<SQL
 drop table user
 SQL
         );
