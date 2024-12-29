@@ -19,6 +19,7 @@ create table user_verification_token (
     token varchar(8) not null,
     created_at datetime not null,
     expires_at datetime not null,
+    is_valid boolean not null,
     primary key(id),
     constraint FK_user_verification_token_user_id foreign key (user_id) references user (id) on delete cascade
 )

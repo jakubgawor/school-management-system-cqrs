@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 #[Entity(repositoryClass: UserVerificationTokenRepository::class)]
 class UserVerificationToken
@@ -20,7 +20,7 @@ class UserVerificationToken
     #[Column(type: Types::GUID)]
     private string $id;
 
-    #[OneToOne(targetEntity: User::class)]
+    #[ManyToOne(targetEntity: User::class)]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private User $user;
 
@@ -33,6 +33,9 @@ class UserVerificationToken
     #[Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $expiresAt;
 
+    #[Column(type: Types::BOOLEAN)]
+    private bool $isValid;
+
     public function __construct(
         string $id,
         User $user,
@@ -44,7 +47,8 @@ class UserVerificationToken
 
         $currentTime = new DateTimeImmutable();
         $this->createdAt = $currentTime;
-        $this->expiresAt = $currentTime->modify('+1 hour');
+        $this->expiresAt = $currentTime->modify('+15 minutes');
+        $this->isValid = true;
     }
 
     public function getId(): string
@@ -75,5 +79,15 @@ class UserVerificationToken
     public function isExpired(): bool
     {
         return $this->expiresAt < new DateTimeImmutable();
+    }
+
+    public function isValid(): bool
+    {
+        return $this->isValid;
+    }
+
+    public function invalidateToken(): void
+    {
+        $this->isValid = false;
     }
 }
