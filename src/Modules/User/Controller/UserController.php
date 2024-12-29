@@ -7,6 +7,7 @@ namespace App\Modules\User\Controller;
 use App\Modules\User\Exception\TokenDoesNotExists;
 use App\Modules\User\Exception\TokenExpired;
 use App\Modules\User\Exception\UserAlreadyExists;
+use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Request\V1\UserRegister as UserRegisterRequestV1;
 use App\Modules\User\Request\V1\VerifyEmail as VerifyEmailRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
@@ -51,9 +52,9 @@ final class UserController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (UserAlreadyExists) {
+        } catch (UserAlreadyExists $exception) {
             throw new ValidationError([
-                ValidationError::GENERAL => ['VALIDATION.USER_ALREADY_EXISTS'],
+                ValidationError::GENERAL => [$exception->getValidationKey()],
             ]);
         }
 
@@ -82,13 +83,9 @@ final class UserController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (TokenExpired) {
+        } catch (TokenExpired|TokenDoesNotExists|UserNotFound $exception) {
             throw new ValidationError([
-                ValidationError::GENERAL => ['VALIDATION.TOKEN_EXPIRED'],
-            ]);
-        } catch (TokenDoesNotExists) {
-            throw new ValidationError([
-                ValidationError::GENERAL => ['VALIDATION.TOKEN_NOT_FOUND'],
+                ValidationError::GENERAL => [$exception->getValidationKey()],
             ]);
         }
 
