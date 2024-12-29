@@ -17,24 +17,22 @@ final class UserVerificationTokenRepository
     public function save(UserVerificationToken $userVerificationToken): void
     {
         $this->entityManager->persist($userVerificationToken);
-        $this->entityManager->flush();
     }
 
-    public function findByToken(string $token): ?UserVerificationToken
+    public function findValidToken(string $email, string $token): ?UserVerificationToken
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
         return $queryBuilder
             ->select('t')
             ->from(UserVerificationToken::class, 't')
-            ->where('t.token = :token')
+            ->join('t.user', 'u')
+            ->where('u.email = :email')
+            ->andWhere('t.token = :token')
+            ->andWhere('t.isValid = true')
+            ->setParameter('email', $email)
             ->setParameter('token', $token)
             ->getQuery()
             ->getOneOrNullResult();
-    }
-
-    public function remove(UserVerificationToken $token): void
-    {
-        $this->entityManager->remove($token);
     }
 }
