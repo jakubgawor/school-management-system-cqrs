@@ -10,13 +10,15 @@ use App\Shared\Request\RequestInterface;
 final readonly class VerifyEmail implements RequestInterface
 {
     public function __construct(
-        public mixed $token
+        public mixed $email,
+        public mixed $token,
     ) {
     }
 
     public function toCommand(): Command
     {
         return new Command(
+            $this->email,
             $this->token,
         );
     }
