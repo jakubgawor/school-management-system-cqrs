@@ -31,6 +31,6 @@ final class UserVerificationTokenService
 
     private function createTokenString(): string
     {
-        return bin2hex(random_bytes(32));
+        return str_pad((string) random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
     }
 }
