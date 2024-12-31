@@ -26,8 +26,10 @@ security:
 
 
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/v1/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v1/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v1/user/request_password_change, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v1/user/change_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 when@test:
     security:
