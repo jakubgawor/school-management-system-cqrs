@@ -92,9 +92,11 @@ class UserVerificationToken
         return $this->isValid;
     }
 
-    public function invalidateToken(): void
+    public function invalidateToken(): self
     {
         $this->isValid = false;
+
+        return $this;
     }
 
     public function getType(): TokenType

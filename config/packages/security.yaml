@@ -26,10 +26,16 @@ security:
 
 
     access_control:
-        - { path: ^/api/v1/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/v1/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/v1/user/request_password_change, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/v1/user/change_password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v1/user/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/user/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/user/request_password_change, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/user/change_password, roles: PUBLIC_ACCESS }
+
+    role_hierarchy:
+        ROLE_USER: ~
+        ROLE_STUDENT: ROLE_USER
+        ROLE_TEACHER: ROLE_STUDENT
+        ROLE_ADMIN: ROLE_TEACHER
 
 when@test:
     security:
