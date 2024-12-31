@@ -18,7 +18,7 @@ final class UserVerificationMailer
     {
         $email = new Email(
             $userEmail,
-            'Verify your email address',
+            'Verification token',
             'Verification token: ' . $token,
         );
 

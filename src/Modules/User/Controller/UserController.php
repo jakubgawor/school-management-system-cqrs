@@ -122,9 +122,20 @@ final class UserController extends AbstractController
         requestBody: new RequestBody(
             required: true,
             content: new JsonContent(
-                required: ['email'],
+                required: ['email', 'token'],
                 properties: [
-                    new Property(property: 'email', description: 'Email address', type: 'string', format: 'email'),
+                    new Property(
+                        property: 'email',
+                        description: 'Email address',
+                        type: 'string',
+                        format: 'email'
+                    ),
+                    new Property(
+                        property: 'type',
+                        description: 'Type of token (enum)',
+                        type: 'string',
+                        enum: ['email_verification', 'password_reset']
+                    ),
                 ],
                 type: 'object'
             )

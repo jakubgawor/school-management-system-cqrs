@@ -39,7 +39,7 @@ final class UserVerificationTokenRepository
             ->getOneOrNullResult();
     }
 
-    public function findLatestToken(string $email, TokenType $type): UserVerificationToken
+    public function findLatestToken(string $email, TokenType $type): ?UserVerificationToken
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
@@ -55,6 +55,6 @@ final class UserVerificationTokenRepository
             ->orderBy('t.createdAt', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 }

@@ -24,17 +24,22 @@ class ResendVerificationCodeHandler implements CommandHandler
 
     public function __invoke(ResendVerificationCode $command): void
     {
-        $user = $this->userRepository->findNotVerifiedByEmail($command->email);
+        if ($command->type === TokenType::EMAIL_VERIFICATION) {
+            $user = $this->userRepository->findNotVerifiedByEmail($command->email);
+        } else {
+            $user = $this->userRepository->findByEmail($command->email);
+        }
+
         if (! $user) {
             throw new UserNotFound();
         }
 
-        $latestToken = $this->verificationTokenRepository->findLatestToken($command->email, TokenType::EMAIL_VERIFICATION);
+        $latestToken = $this->verificationTokenRepository->findLatestToken($command->email, $command->type);
 
-        if (new DateTimeImmutable() <= $latestToken->getCreatedAt()->modify('+3 minutes')) {
+        if ($latestToken && new DateTimeImmutable() <= $latestToken->getCreatedAt()->modify('+3 minutes')) {
             throw new TokenCooldownViolation();
         }
 
-        $this->userTokenFacade->createAndSendVerificationToken($user, TokenType::EMAIL_VERIFICATION);
+        $this->userTokenFacade->createAndSendVerificationToken($user, $command->type);
     }
 }

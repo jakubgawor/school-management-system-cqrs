@@ -11,3 +11,14 @@ App\Modules\User\Request\V1\ResendVerificationCode:
           max: 64
           minMessage: 'VALIDATION.TOO_SHORT'
           maxMessage: 'VALIDATION.TOO_LONG'
+    type:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Choice:
+          choices:
+            - email_verification
+            - password_reset
+          message: 'VALIDATION.WRONG_TOKEN_TYPE'
