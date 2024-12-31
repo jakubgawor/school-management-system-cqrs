@@ -9,6 +9,7 @@ use App\Modules\User\Exception\TokenDoesNotExists;
 use App\Modules\User\Exception\TokenExpired;
 use App\Modules\User\Exception\UserAlreadyExists;
 use App\Modules\User\Exception\UserNotFound;
+use App\Modules\User\Request\V1\ChangePassword as ChangePasswordRequestV1;
 use App\Modules\User\Request\V1\RequestPasswordChange as RequestPasswordChangeRequestV1;
 use App\Modules\User\Request\V1\ResendVerificationCode as ResendVerificationCodeRequestV1;
 use App\Modules\User\Request\V1\UserRegister as UserRegisterRequestV1;
@@ -182,6 +183,40 @@ final class UserController extends AbstractController
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (UserNotFound $exception) {
+            throw new ValidationError([
+                ValidationError::GENERAL => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse([
+            'status' => 'ok',
+        ], Response::HTTP_OK);
+    }
+
+    #[Post(
+        summary: 'Change password',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['email', 'password', 'token'],
+                properties: [
+                    new Property(property: 'email', description: 'Email address', type: 'string', format: 'email'),
+                    new Property(property: 'password', description: 'New password', type: 'string', format: 'email'),
+                    new Property(property: 'token', description: 'Verification token', type: 'string'),
+                ],
+                type: 'object'
+            )
+        ),
+        tags: ['User', 'v1']
+    )]
+    #[Route('/api/v1/user/change_password', name: 'v1.user.change_password', methods: ['POST'])]
+    public function changePasswordV1(ChangePasswordRequestV1 $request): Response
+    {
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (UserNotFound|TokenDoesNotExists|TokenExpired $exception) {
             throw new ValidationError([
                 ValidationError::GENERAL => [$exception->getValidationKey()],
             ]);
