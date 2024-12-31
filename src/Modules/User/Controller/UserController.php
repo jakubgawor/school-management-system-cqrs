@@ -127,4 +127,23 @@ final class UserController extends AbstractController
             'status' => 'ok',
         ], Response::HTTP_OK);
     }
+
+    #[Post(
+        summary: 'User login',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['username', 'password'],
+                properties: [
+                    new Property(property: 'username', description: 'User email address', type: 'string', format: 'email'),
+                    new Property(property: 'password', description: 'User password', type: 'string'),
+                ],
+                type: 'object'
+            )
+        ), tags: ['User', 'v1'],
+    )]
+    #[Route('/api/v1/user/login', methods: ['POST'])]
+    public function login(): void
+    {
+    }
 }
