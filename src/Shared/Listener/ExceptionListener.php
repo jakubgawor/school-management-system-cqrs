@@ -24,7 +24,7 @@ final class ExceptionListener
         if ($exception instanceof ValidationError) {
             $code = Response::HTTP_BAD_REQUEST;
             $content['errors'] = $exception->getErrors();
-        } if ($exception instanceof BaseException) {
+        } else if ($exception instanceof BaseException) {
             $code = $exception->getCode();
             $content['errors'] = $exception->getValidationKey();
         } else {
