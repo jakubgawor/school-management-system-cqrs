@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Listener;
 
+use App\Shared\Exception\BaseException;
 use App\Shared\Request\Validator\ValidationError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,9 @@ final class ExceptionListener
         if ($exception instanceof ValidationError) {
             $code = Response::HTTP_BAD_REQUEST;
             $content['errors'] = $exception->getErrors();
+        } if ($exception instanceof BaseException) {
+            $code = $exception->getCode();
+            $content['errors'] = $exception->getValidationKey();
         } else {
             $code = Response::HTTP_INTERNAL_SERVER_ERROR;
             if ($this->environment !== 'prod') {
