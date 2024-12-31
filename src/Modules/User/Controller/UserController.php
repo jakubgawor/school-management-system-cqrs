@@ -9,6 +9,7 @@ use App\Modules\User\Exception\TokenDoesNotExists;
 use App\Modules\User\Exception\TokenExpired;
 use App\Modules\User\Exception\UserAlreadyExists;
 use App\Modules\User\Exception\UserNotFound;
+use App\Modules\User\Request\V1\RequestPasswordChange as RequestPasswordChangeRequestV1;
 use App\Modules\User\Request\V1\ResendVerificationCode as ResendVerificationCodeRequestV1;
 use App\Modules\User\Request\V1\UserRegister as UserRegisterRequestV1;
 use App\Modules\User\Request\V1\VerifyEmail as VerifyEmailRequestV1;
@@ -138,6 +139,38 @@ final class UserController extends AbstractController
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (UserNotFound|TokenCooldownViolation $exception) {
+            throw new ValidationError([
+                ValidationError::GENERAL => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse([
+            'status' => 'ok',
+        ], Response::HTTP_OK);
+    }
+
+    #[Post(
+        summary: 'Request password change',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['email'],
+                properties: [
+                    new Property(property: 'email', description: 'Email address', type: 'string', format: 'email'),
+                ],
+                type: 'object'
+            )
+        ),
+        tags: ['User', 'v1']
+    )]
+    #[Route('/api/v1/user/request_password_change', name: 'v1.user.request_password_change', methods: ['POST'])]
+    public function requestPasswordChangeV1(RequestPasswordChangeRequestV1 $request): Response
+    {
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (UserNotFound $exception) {
             throw new ValidationError([
                 ValidationError::GENERAL => [$exception->getValidationKey()],
             ]);
