@@ -9,6 +9,7 @@ use App\Shared\Request\Validator\ValidationError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class ExceptionListener
 {
@@ -27,6 +28,9 @@ final class ExceptionListener
         } elseif ($exception instanceof BaseException) {
             $code = $exception->getCode();
             $content['errors'] = $exception->getValidationKey();
+        } elseif ($exception instanceof AccessDeniedHttpException) {
+            $code = Response::HTTP_FORBIDDEN;
+            $content['errors'] = 'VALIDATION.EXCEPTION';
         } else {
             $code = Response::HTTP_INTERNAL_SERVER_ERROR;
             if ($this->environment !== 'prod') {
