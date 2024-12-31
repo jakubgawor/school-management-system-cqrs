@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Command\Sync;
 
-use App\Modules\User\Mailer\UserVerificationMailer;
+use App\Modules\User\Enum\TokenType;
+use App\Modules\User\Facade\UserTokenFacade;
 use App\Modules\User\Service\UserRegistrationService;
-use App\Modules\User\Service\UserVerificationTokenService;
 use App\Shared\Command\Sync\CommandHandler;
 
 final class UserRegisterHandler implements CommandHandler
 {
     public function __construct(
         private UserRegistrationService $userRegistrationService,
-        private UserVerificationTokenService $userVerificationTokenService,
-        private UserVerificationMailer $userVerificationMailer,
+        private UserTokenFacade $userTokenFacade,
     ) {
     }
 
@@ -25,8 +24,6 @@ final class UserRegisterHandler implements CommandHandler
             $command->password,
         );
 
-        $verificationToken = $this->userVerificationTokenService->createVerificationToken($user);
-
-        $this->userVerificationMailer->sendToken($user->getEmail(), $verificationToken->getToken());
+        $this->userTokenFacade->createAndSendVerificationToken($user, TokenType::EMAIL_VERIFICATION);
     }
 }
