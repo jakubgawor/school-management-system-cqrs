@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Entity;
 
+use App\Modules\User\Enum\TokenType;
 use App\Modules\User\Repository\UserVerificationTokenRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
@@ -36,14 +37,19 @@ class UserVerificationToken
     #[Column(type: Types::BOOLEAN)]
     private bool $isValid;
 
+    #[Column(type: Types::STRING, enumType: TokenType::class)]
+    private TokenType $type;
+
     public function __construct(
         string $id,
         User $user,
         string $token,
+        TOkenType $type,
     ) {
         $this->id = $id;
         $this->user = $user;
         $this->token = $token;
+        $this->type = $type;
 
         $currentTime = new DateTimeImmutable();
         $this->createdAt = $currentTime;
@@ -89,5 +95,10 @@ class UserVerificationToken
     public function invalidateToken(): void
     {
         $this->isValid = false;
+    }
+
+    public function getType(): TokenType
+    {
+        return $this->type;
     }
 }
