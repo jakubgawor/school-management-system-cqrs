@@ -6,6 +6,7 @@ namespace App\Modules\User\Service;
 
 use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\UserVerificationToken;
+use App\Modules\User\Enum\TokenType;
 use App\Modules\User\Repository\UserVerificationTokenRepository;
 use App\Shared\Ramsey\IdGenerator;
 
@@ -16,12 +17,13 @@ final class UserVerificationTokenService
     ) {
     }
 
-    public function createVerificationToken(User $user): UserVerificationToken
+    public function createVerificationToken(User $user, TokenType $tokenType): UserVerificationToken
     {
         $verificationToken = new UserVerificationToken(
             IdGenerator::generate(),
             $user,
             $this->createTokenString(),
+            $tokenType
         );
 
         $this->userVerificationTokenRepository->save($verificationToken);

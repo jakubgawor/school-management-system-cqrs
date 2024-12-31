@@ -6,6 +6,7 @@ namespace App\Modules\User\Command\Sync;
 
 use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\UserVerificationToken;
+use App\Modules\User\Enum\TokenType;
 use App\Modules\User\Exception\TokenDoesNotExists;
 use App\Modules\User\Exception\TokenExpired;
 use App\Modules\User\Exception\UserNotFound;
@@ -49,7 +50,7 @@ final class VerifyEmailHandler implements CommandHandler
 
     private function getTokenOrFail(string $email, string $token): UserVerificationToken
     {
-        $token = $this->userVerificationTokenRepository->findValidToken($email, $token);
+        $token = $this->userVerificationTokenRepository->findValidToken($email, $token, TokenType::EMAIL_VERIFICATION);
         if (! $token) {
             throw new TokenDoesNotExists();
         }
