@@ -25,7 +25,7 @@ final class ChangePasswordHandler implements CommandHandler
     public function __invoke(ChangePassword $command): void
     {
         $user = $this->userRepository->findByEmail($command->email);
-        if (!$user) {
+        if (! $user) {
             throw new UserNotFound();
         }
 
