@@ -62,7 +62,7 @@ final class UserController extends AbstractController
             ]);
         }
 
-        return new JsonResponse(null, Response::HTTP_CREATED);
+        return new JsonResponse(['status' => 'ok'], Response::HTTP_CREATED);
     }
 
     #[Post(
