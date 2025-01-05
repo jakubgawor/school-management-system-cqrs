@@ -1,2 +1,6 @@
 framework:
     cache:
+        default_redis_provider: 'redis://redis:6379'
+        pools:
+            block_list_token_cache_pool:
+                adapter: cache.adapter.redis
