@@ -1,0 +1,21 @@
+App\Modules\User\Request\V1\PromoteUser:
+  properties:
+    id:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Regex:
+          pattern: '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i'
+          message: 'VALIDATION.INVALID_FORMAT'
+    role:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Choice:
+          choices:
+            - ROLE_USER
+            - ROLE_STUDENT
+            - ROLE_TEACHER
+            - ROLE_ADMIN
+          message: 'VALIDATION.ROLE_NOT_FOUND'
