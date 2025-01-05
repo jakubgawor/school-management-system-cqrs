@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Controller;
 
+use App\Modules\User\Exception\AccessDenied;
+use App\Modules\User\Exception\RoleAlreadyAssigned;
 use App\Modules\User\Exception\TokenCooldownViolation;
 use App\Modules\User\Exception\TokenDoesNotExists;
 use App\Modules\User\Exception\TokenExpired;
@@ -11,6 +13,7 @@ use App\Modules\User\Exception\UserAlreadyExists;
 use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Query\GetUserBasicInfoQuery;
 use App\Modules\User\Request\V1\ChangePassword as ChangePasswordRequestV1;
+use App\Modules\User\Request\V1\ChangeUserRole as ChangeUserRoleRequestV1;
 use App\Modules\User\Request\V1\RequestPasswordChange as RequestPasswordChangeRequestV1;
 use App\Modules\User\Request\V1\ResendVerificationCode as ResendVerificationCodeRequestV1;
 use App\Modules\User\Request\V1\UserRegister as UserRegisterRequestV1;
@@ -297,5 +300,44 @@ final class UserController extends AbstractController
     public function meV1(GetUserBasicInfoQuery $getUserBasicInfoQuery): Response
     {
         return new JsonResponse($getUserBasicInfoQuery->execute($this->getUser()));
+    }
+
+    #[Post(
+        summary: 'Change user role',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['role'],
+                properties: [
+                    new Property(
+                        property: 'role',
+                        description: 'User role, eg. ROLE_USER/ROLE_STUDENT/ROLE_TEACHER/ROLE_ADMIN',
+                        type: 'string',
+                    ),
+                ],
+                type: 'object'
+            )
+        ),
+        tags: ['User', 'v1']
+    )]
+    #[Security(name: 'Bearer')]
+    #[Route('/api/v1/user/{userId}/change_role', name: 'v1.user.change_role', methods: ['POST'])]
+    public function changeUserRoleV1(string $userId, ChangeUserRoleRequestV1 $request): JsonResponse
+    {
+        $request->id = $userId;
+
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (AccessDenied|UserNotFound|RoleAlreadyAssigned $exception) {
+            throw new ValidationError([
+                ValidationError::GENERAL => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse([
+            'status' => 'ok',
+        ], Response::HTTP_OK);
     }
 }

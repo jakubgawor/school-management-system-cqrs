@@ -33,12 +33,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified;
 
     #[Column(type: Types::JSON)]
-    private array $roles = [];
+    private array $roles;
 
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
         $this->isVerified = false;
+        $this->roles = ['ROLE_USER'];
     }
 
     public function getId(): string
@@ -96,10 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return array_unique($this->roles);
     }
 
     public function setRoles(array $roles): self

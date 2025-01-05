@@ -14,6 +14,19 @@ final class UserRepository
     ) {
     }
 
+    public function findById(string $id): ?User
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+
+        return $queryBuilder
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findByEmail(string $email): ?User
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
