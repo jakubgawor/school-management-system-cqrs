@@ -25,6 +25,7 @@ use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
+use OpenApi\Attributes\Response as OAResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,7 +34,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
-use OpenApi\Attributes\Response as OAResponse;
 
 final class UserController extends AbstractController
 {
@@ -289,7 +289,7 @@ final class UserController extends AbstractController
             new OAResponse(
                 response: 401,
                 description: 'Unauthorized access',
-            )
+            ),
         ]
     )]
     #[Security(name: 'Bearer')]
