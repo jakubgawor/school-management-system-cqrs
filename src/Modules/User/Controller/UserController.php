@@ -22,9 +22,13 @@ use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 final class UserController extends AbstractController
 {
@@ -83,6 +87,18 @@ final class UserController extends AbstractController
     #[Route('/api/v1/user/login', methods: ['POST'])]
     public function login(): void
     {
+    }
+
+    #[Post(
+        summary: 'User logout',
+        tags: ['User', 'v1'],
+    )]
+    #[Route('/api/v1/user/logout', name: 'v1.user.logout', methods: ['POST'])]
+    public function logout(Request $request, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage): JsonResponse
+    {
+        $eventDispatcher->dispatch(new LogoutEvent($request, $tokenStorage->getToken()));
+
+        return new JsonResponse(['status' => 'ok'], Response::HTTP_OK);
     }
 
     #[Post(
@@ -146,6 +162,7 @@ final class UserController extends AbstractController
     #[Route('/api/v1/user/resend_verification_code', name: 'v1.user.resend_verification_code', methods: ['POST'])]
     public function resendVerificationCodeV1(ResendVerificationCodeRequestV1 $request): Response
     {
+        dd($this->getUser());
         $this->validator->validate($request);
 
         try {
