@@ -2,12 +2,11 @@ FROM php:8.4-apache
 
 RUN apt-get update \
     && apt-get install -y libzip-dev zip \
-    && docker-php-ext-install zip \
-    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install zip pdo_mysql \
+    && pecl install xdebug redis \
+    && docker-php-ext-enable xdebug redis \
     && a2enmod rewrite \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN usermod -u 1000 www-data
 
