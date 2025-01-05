@@ -66,7 +66,9 @@ final class UserController extends AbstractController
             ]);
         }
 
-        return new JsonResponse(['status' => 'ok'], Response::HTTP_CREATED);
+        return new JsonResponse([
+            'status' => 'ok',
+        ], Response::HTTP_CREATED);
     }
 
     #[Post(
@@ -98,7 +100,9 @@ final class UserController extends AbstractController
     {
         $eventDispatcher->dispatch(new LogoutEvent($request, $tokenStorage->getToken()));
 
-        return new JsonResponse(['status' => 'ok'], Response::HTTP_OK);
+        return new JsonResponse([
+            'status' => 'ok',
+        ], Response::HTTP_OK);
     }
 
     #[Post(
@@ -162,7 +166,6 @@ final class UserController extends AbstractController
     #[Route('/api/v1/user/resend_verification_code', name: 'v1.user.resend_verification_code', methods: ['POST'])]
     public function resendVerificationCodeV1(ResendVerificationCodeRequestV1 $request): Response
     {
-        dd($this->getUser());
         $this->validator->validate($request);
 
         try {
