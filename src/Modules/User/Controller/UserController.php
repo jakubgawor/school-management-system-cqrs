@@ -9,6 +9,7 @@ use App\Modules\User\Exception\TokenDoesNotExists;
 use App\Modules\User\Exception\TokenExpired;
 use App\Modules\User\Exception\UserAlreadyExists;
 use App\Modules\User\Exception\UserNotFound;
+use App\Modules\User\Query\GetUserBasicInfoQuery;
 use App\Modules\User\Request\V1\ChangePassword as ChangePasswordRequestV1;
 use App\Modules\User\Request\V1\RequestPasswordChange as RequestPasswordChangeRequestV1;
 use App\Modules\User\Request\V1\ResendVerificationCode as ResendVerificationCodeRequestV1;
@@ -17,6 +18,9 @@ use App\Modules\User\Request\V1\VerifyEmail as VerifyEmailRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
+use Nelmio\ApiDocBundle\Attribute\Security;
+use OpenApi\Attributes\Get;
+use OpenApi\Attributes\Items;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
@@ -29,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
+use OpenApi\Attributes\Response as OAResponse;
 
 final class UserController extends AbstractController
 {
@@ -95,6 +100,7 @@ final class UserController extends AbstractController
         summary: 'User logout',
         tags: ['User', 'v1'],
     )]
+    #[Security(name: 'Bearer')]
     #[Route('/api/v1/user/logout', name: 'v1.user.logout', methods: ['POST'])]
     public function logout(Request $request, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage): JsonResponse
     {
@@ -245,5 +251,51 @@ final class UserController extends AbstractController
         return new JsonResponse([
             'status' => 'ok',
         ], Response::HTTP_OK);
+    }
+
+    #[Get(
+        summary: 'Get basic user info',
+        tags: ['User', 'v1'],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Returns the basic user info',
+                content: new JsonContent(
+                    properties: [
+                        new Property(
+                            property: 'id',
+                            description: 'Unique user identifier',
+                            type: 'string',
+                            format: 'uuid'
+                        ),
+                        new Property(
+                            property: 'email',
+                            description: 'User email address',
+                            type: 'string',
+                            format: 'email'
+                        ),
+                        new Property(
+                            property: 'roles',
+                            description: 'Array of user roles',
+                            type: 'array',
+                            items: new Items(
+                                type: 'string'
+                            )
+                        ),
+                    ],
+                    type: 'object'
+                ),
+            ),
+            new OAResponse(
+                response: 401,
+                description: 'Unauthorized access',
+            )
+        ]
+    )]
+    #[Security(name: 'Bearer')]
+    #[Route('/api/v1/user/me', name: 'v1.user.me', methods: ['GET'])]
+    public function meV1(GetUserBasicInfoQuery $getUserBasicInfoQuery): Response
+    {
+        return new JsonResponse($getUserBasicInfoQuery->execute($this->getUser()));
     }
 }
