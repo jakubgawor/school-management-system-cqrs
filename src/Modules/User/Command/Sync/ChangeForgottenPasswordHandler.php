@@ -11,7 +11,7 @@ use App\Modules\User\Util\AbstractTokenHandler;
 use App\Shared\Command\Sync\CommandHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-final class ChangePasswordHandler extends AbstractTokenHandler implements CommandHandler
+final class ChangeForgottenPasswordHandler extends AbstractTokenHandler implements CommandHandler
 {
     public function __construct(
         UserRepository $userRepository,
@@ -21,7 +21,7 @@ final class ChangePasswordHandler extends AbstractTokenHandler implements Comman
         parent::__construct($userRepository, $userVerificationTokenRepository);
     }
 
-    public function __invoke(ChangePassword $command): void
+    public function __invoke(ChangeForgottenPassword $command): void
     {
         $user = $this->getUserOrFail($command->email);
         $token = $this->getValidTokenOrFail($command->email, $command->token, TokenType::PASSWORD_RESET);

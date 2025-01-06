@@ -6,7 +6,7 @@ namespace App\Modules\User\Command\Sync;
 
 use App\Shared\Command\Sync\Command;
 
-final readonly class ChangePassword implements Command
+final readonly class ChangeForgottenPassword implements Command
 {
     public function __construct(
         public string $email,
