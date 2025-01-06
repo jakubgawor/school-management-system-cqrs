@@ -73,7 +73,7 @@ final class UserController extends AbstractController
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (UserAlreadyExists $exception) {
             throw new ValidationError([
-                ValidationError::GENERAL => [$exception->getValidationKey()],
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
         }
 
@@ -143,7 +143,7 @@ final class UserController extends AbstractController
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (TokenExpired|TokenDoesNotExists|UserNotFound $exception) {
             throw new ValidationError([
-                ValidationError::GENERAL => [$exception->getValidationKey()],
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
         }
 
@@ -186,7 +186,7 @@ final class UserController extends AbstractController
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (UserNotFound|TokenCooldownViolation $exception) {
             throw new ValidationError([
-                ValidationError::GENERAL => [$exception->getValidationKey()],
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
         }
 
@@ -219,7 +219,7 @@ final class UserController extends AbstractController
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (UserNotFound $exception) {
             throw new ValidationError([
-                ValidationError::GENERAL => [$exception->getValidationKey()],
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
         }
 
@@ -254,7 +254,7 @@ final class UserController extends AbstractController
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (UserNotFound|TokenDoesNotExists|TokenExpired $exception) {
             throw new ValidationError([
-                ValidationError::GENERAL => [$exception->getValidationKey()],
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
         }
 
@@ -341,7 +341,7 @@ final class UserController extends AbstractController
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (UserNotFound|RoleAlreadyAssigned $exception) {
             throw new ValidationError([
-                ValidationError::GENERAL => [$exception->getValidationKey()],
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
         }
 

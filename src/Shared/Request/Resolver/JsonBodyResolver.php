@@ -41,7 +41,7 @@ final class JsonBodyResolver implements ValueResolverInterface
             );
         } catch (UnexpectedValueException|InvalidArgumentException|RuntimeException) {
             throw new ValidationError([
-                ValidationError::GENERAL => 'VALIDATION.INVALID_PAYLOAD',
+                ValidationError::VALIDATION => 'VALIDATION.INVALID_PAYLOAD',
             ]);
         }
     }
