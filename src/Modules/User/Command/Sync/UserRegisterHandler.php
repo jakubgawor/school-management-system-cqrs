@@ -20,6 +20,8 @@ final class UserRegisterHandler implements CommandHandler
     public function __invoke(UserRegister $command): void
     {
         $user = $this->userRegistrationService->registerUser(
+            $command->firstName,
+            $command->lastName,
             $command->email,
             $command->password,
         );

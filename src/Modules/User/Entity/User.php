@@ -20,6 +20,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(type: Types::GUID)]
     private string $id;
 
+    #[Column(type: Types::STRING, length: 64)]
+    private string $firstName;
+
+    #[Column(type: Types::STRING, length: 64)]
+    private string $lastName;
+
     #[Column(type: Types::STRING, length: 64, unique: true)]
     private string $email;
 
@@ -52,6 +58,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->id = $id;
 
         return $this;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
     }
 
     public function getEmail(): string

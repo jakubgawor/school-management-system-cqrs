@@ -1,5 +1,27 @@
 App\Modules\User\Request\V1\UserRegister:
   properties:
+    firstName:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Length:
+          min: 2
+          max: 64
+          minMessage: 'VALIDATION.TOO_SHORT'
+          maxMessage: 'VALIDATION.TOO_LONG'
+    lastName:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Length:
+          min: 2
+          max: 64
+          minMessage: 'VALIDATION.TOO_SHORT'
+          maxMessage: 'VALIDATION.TOO_LONG'
     email:
       - NotBlank:
           message: 'VALIDATION.MISSING'

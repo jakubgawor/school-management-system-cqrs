@@ -18,7 +18,7 @@ final class UserRegistrationService
     ) {
     }
 
-    public function registerUser(string $email, string $password): User
+    public function registerUser(string $firstName, string $lastName, string $email, string $password): User
     {
         if ($this->userRepository->findByEmail($email) !== null) {
             throw new UserAlreadyExists();
@@ -26,6 +26,8 @@ final class UserRegistrationService
 
         $user = new User();
         $user->setId(IdGenerator::generate());
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
         $user->setEmail($email);
         $user->setPassword($this->userPasswordHasher->hashPassword($user, $password));
 
