@@ -8,7 +8,7 @@ use RuntimeException;
 
 final class ValidationError extends RuntimeException
 {
-    public const string GENERAL = 'general';
+    public const string VALIDATION = 'validation';
 
     private array $errors;
 
