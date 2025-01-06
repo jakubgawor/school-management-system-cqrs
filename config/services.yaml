@@ -16,6 +16,18 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
+    App\Modules\User\EventListener\JwtNotFoundListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJwtNotFound }
+
+    App\Modules\User\EventListener\JwtInvalidListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onInvalidJwt }
+
+    App\Modules\User\EventListener\VerifyUserListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: isUserVerified }
+
     _instanceof:
         App\Shared\Command\Sync\CommandHandler:
             tags:
