@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Controller;
 
-use App\Modules\User\Exception\AccessDenied;
 use App\Modules\User\Exception\RoleAlreadyAssigned;
 use App\Modules\User\Exception\TokenCooldownViolation;
 use App\Modules\User\Exception\TokenDoesNotExists;
@@ -12,7 +11,7 @@ use App\Modules\User\Exception\TokenExpired;
 use App\Modules\User\Exception\UserAlreadyExists;
 use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Query\GetUserBasicInfoQuery;
-use App\Modules\User\Request\V1\ChangePassword as ChangePasswordRequestV1;
+use App\Modules\User\Request\V1\ChangeForgottenPassword as ChangeForgottenPasswordRequestV1;
 use App\Modules\User\Request\V1\ChangeUserRole as ChangeUserRoleRequestV1;
 use App\Modules\User\Request\V1\RequestPasswordChange as RequestPasswordChangeRequestV1;
 use App\Modules\User\Request\V1\ResendVerificationCode as ResendVerificationCodeRequestV1;
@@ -36,6 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 final class UserController extends AbstractController
@@ -61,6 +61,7 @@ final class UserController extends AbstractController
         ),
         tags: ['User', 'v1']
     )]
+    #[IsGranted('UNAUTHENTICATED_USER')]
     #[Route('/api/v1/user/register', name: 'v1.user.register', methods: ['POST'])]
     public function registerV1(UserRegisterRequestV1 $request): Response
     {
@@ -104,6 +105,7 @@ final class UserController extends AbstractController
         tags: ['User', 'v1'],
     )]
     #[Security(name: 'Bearer')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/api/v1/user/logout', name: 'v1.user.logout', methods: ['POST'])]
     public function logout(Request $request, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage): JsonResponse
     {
@@ -129,6 +131,7 @@ final class UserController extends AbstractController
         ),
         tags: ['User', 'v1']
     )]
+    #[IsGranted('IS_NOT_VERIFIED_BY_EMAIL')]
     #[Route('/api/v1/user/verify_email', name: 'v1.user.verify_email', methods: ['POST'])]
     public function verifyEmailV1(VerifyEmailRequestV1 $request): Response
     {
@@ -204,6 +207,7 @@ final class UserController extends AbstractController
         ),
         tags: ['User', 'v1']
     )]
+    #[IsGranted('UNAUTHENTICATED_USER')]
     #[Route('/api/v1/user/request_password_change', name: 'v1.user.request_password_change', methods: ['POST'])]
     public function requestPasswordChangeV1(RequestPasswordChangeRequestV1 $request): Response
     {
@@ -223,7 +227,7 @@ final class UserController extends AbstractController
     }
 
     #[Post(
-        summary: 'Change password',
+        summary: 'Change forgotten password',
         requestBody: new RequestBody(
             required: true,
             content: new JsonContent(
@@ -238,8 +242,9 @@ final class UserController extends AbstractController
         ),
         tags: ['User', 'v1']
     )]
-    #[Route('/api/v1/user/change_password', name: 'v1.user.change_password', methods: ['POST'])]
-    public function changePasswordV1(ChangePasswordRequestV1 $request): Response
+    #[IsGranted('UNAUTHENTICATED_USER')]
+    #[Route('/api/v1/user/change_forgotten_password', name: 'v1.user.change_forgotten_password', methods: ['POST'])]
+    public function changeForgottenPasswordV1(ChangeForgottenPasswordRequestV1 $request): Response
     {
         $this->validator->validate($request);
 
@@ -296,6 +301,7 @@ final class UserController extends AbstractController
         ]
     )]
     #[Security(name: 'Bearer')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/api/v1/user/me', name: 'v1.user.me', methods: ['GET'])]
     public function meV1(GetUserBasicInfoQuery $getUserBasicInfoQuery): Response
     {
@@ -321,6 +327,7 @@ final class UserController extends AbstractController
         tags: ['User', 'v1']
     )]
     #[Security(name: 'Bearer')]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/user/{userId}/change_role', name: 'v1.user.change_role', methods: ['POST'])]
     public function changeUserRoleV1(string $userId, ChangeUserRoleRequestV1 $request): JsonResponse
     {
@@ -330,7 +337,7 @@ final class UserController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (AccessDenied|UserNotFound|RoleAlreadyAssigned $exception) {
+        } catch (UserNotFound|RoleAlreadyAssigned $exception) {
             throw new ValidationError([
                 ValidationError::GENERAL => [$exception->getValidationKey()],
             ]);
