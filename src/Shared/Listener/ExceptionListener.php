@@ -30,7 +30,7 @@ final class ExceptionListener
             $content['errors'] = $exception->getValidationKey();
         } elseif ($exception instanceof AccessDeniedHttpException) {
             $code = Response::HTTP_FORBIDDEN;
-            $content['errors'] = 'VALIDATION.EXCEPTION';
+            $content['errors'] = 'VALIDATION.ACCESS_DENIED';
         } else {
             $code = Response::HTTP_INTERNAL_SERVER_ERROR;
             if ($this->environment !== 'prod') {
