@@ -14,6 +14,7 @@ final readonly class UserRegister implements RequestInterface
         public mixed $lastName,
         public mixed $email,
         public mixed $password,
+        public mixed $confirmPassword,
     ) {
     }
 
@@ -23,7 +24,8 @@ final readonly class UserRegister implements RequestInterface
             $this->firstName,
             $this->lastName,
             $this->email,
-            $this->password
+            $this->password,
+            $this->confirmPassword,
         );
     }
 }

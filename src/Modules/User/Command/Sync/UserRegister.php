@@ -13,6 +13,7 @@ final readonly class UserRegister implements Command
         public string $lastName,
         public string $email,
         public string $password,
+        public string $confirmPassword,
     ) {
     }
 }
