@@ -25,13 +25,8 @@ security:
             jwt: ~
 
 
-    access_control:
-        - { path: ^/api/v1/user/register, roles: PUBLIC_ACCESS }
-        - { path: ^/api/v1/user/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/v1/user/request_password_change, roles: PUBLIC_ACCESS }
-        - { path: ^/api/v1/user/change_password, roles: PUBLIC_ACCESS }
-        - { path: ^/api/v1/user/logout, roles: ROLE_USER }
-        - { path: ^/api/v1/user/me, roles: ROLE_USER }
+#    access_control:
+#        - { path: ^/api/v1/admin, roles: ROLE_ADMIN }
 
     role_hierarchy:
         ROLE_USER: ~
