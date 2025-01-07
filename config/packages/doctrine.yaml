@@ -25,6 +25,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Modules/Student/Entity'
                 prefix: 'App\Modules\Student\Entity'
                 alias: App
+            Teacher:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Modules/Teacher/Entity'
+                prefix: 'App\Modules\Teacher\Entity'
+                alias: App
         controller_resolver:
             auto_mapping: false
 
