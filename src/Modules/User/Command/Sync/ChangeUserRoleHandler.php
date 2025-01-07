@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Command\Sync;
 
+use App\Modules\User\Event\UserRoleChanged;
 use App\Modules\User\Exception\RoleAlreadyAssigned;
 use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Repository\UserRepository;
 use App\Shared\Command\Sync\CommandHandler;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ChangeUserRoleHandler implements CommandHandler
 {
     public function __construct(
         private UserRepository $userRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -27,7 +30,12 @@ class ChangeUserRoleHandler implements CommandHandler
             throw new RoleAlreadyAssigned();
         }
 
-        $user->setRoles([strtoupper($command->role)]);
+        $oldRole = $user->getRoles()[0];
+        $newRole = strtoupper($command->role);
+
+        $user->setRoles([$newRole]);
         $this->userRepository->save($user);
+
+        $this->eventDispatcher->dispatch(new UserRoleChanged($user->getId(), $oldRole, $newRole));
     }
 }
