@@ -7,7 +7,7 @@ namespace App\Modules\User\EventListener;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class JwtNotFoundListener
+final class JwtNotFoundListener
 {
     public function onJwtNotFound(JwtNotFoundEvent $event): void
     {
