@@ -24,6 +24,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onInvalidJwt }
 
+    App\Modules\User\EventListener\JwtExpiredListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onExpiredJwt }
+
     App\Modules\User\EventListener\VerifyUserListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: isUserVerified }
