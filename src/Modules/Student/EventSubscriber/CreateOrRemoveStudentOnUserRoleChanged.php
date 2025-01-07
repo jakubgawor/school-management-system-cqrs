@@ -17,7 +17,7 @@ final class CreateOrRemoveStudentOnUserRoleChanged implements EventSubscriberInt
     ) {
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             UserRoleChanged::class => 'onUserRoleChanged',
@@ -31,7 +31,7 @@ final class CreateOrRemoveStudentOnUserRoleChanged implements EventSubscriberInt
             $this->studentRepository->save($student);
         }
 
-        if ($event->oldRole === 'ROLE_STUDENT' && $event->newRole === 'ROLE_USER') {
+        if ($event->oldRole === 'ROLE_STUDENT' && $event->newRole !== 'ROLE_STUDENT') {
             $student = $this->studentRepository->findByUserId($event->userId);
 
             if ($student) {
