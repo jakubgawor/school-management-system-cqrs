@@ -7,7 +7,7 @@ namespace App\Modules\User\EventListener;
 use App\Modules\User\Exception\InvalidJwtToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 
-class JwtInvalidListener
+final class JwtInvalidListener
 {
     public function onInvalidJwt(JWTInvalidEvent $event): void
     {
