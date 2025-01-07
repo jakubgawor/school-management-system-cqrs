@@ -8,7 +8,7 @@ use App\Modules\User\Exception\UserIsNotVerified;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-class VerifyUserListener
+final class VerifyUserListener
 {
     private const array ALLOWED_ROUTES = [
         'v1.user.verify_email',
