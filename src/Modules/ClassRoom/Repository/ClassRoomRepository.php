@@ -31,6 +31,18 @@ class ClassRoomRepository
             ->getOneOrNullResult();
     }
 
+    public function findById(string $id): ?ClassRoom
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('classRoom')
+            ->from(ClassRoom::class, 'classRoom')
+            ->where('classRoom.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findPaginatedClassRooms(int $page, int $limit): array
     {
         return $this->entityManager

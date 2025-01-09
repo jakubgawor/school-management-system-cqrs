@@ -1,0 +1,14 @@
+App\Modules\ClassRoom\Request\V1\EditClassRoom:
+  properties:
+    name:
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Length:
+          min: 2
+          max: 64
+          minMessage: 'VALIDATION.TOO_SHORT'
+          maxMessage: 'VALIDATION.TOO_LONG'
+      - Regex:
+          pattern: '/^\S+$/'
+          message: 'VALIDATION.NO_SPACES_ALLOWED'

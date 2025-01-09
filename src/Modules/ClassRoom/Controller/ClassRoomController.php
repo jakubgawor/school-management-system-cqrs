@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Modules\ClassRoom\Controller;
 
 use App\Modules\ClassRoom\Exception\ClassRoomAlreadyExists;
+use App\Modules\ClassRoom\Exception\ClassRoomDoesNotExist;
 use App\Modules\ClassRoom\Query\ClassRoomListQuery;
 use App\Modules\ClassRoom\Request\V1\CreateClassRoom as CreateClassRoomRequestV1;
+use App\Modules\ClassRoom\Request\V1\EditClassRoom as EditClassRoomRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
@@ -127,5 +129,23 @@ final class ClassRoomController extends AbstractController
     public function classRoomList(ClassRoomListQuery $classRoomListQuery): Response
     {
         return new JsonResponse($classRoomListQuery->execute());
+    }
+
+    #[Route('/api/v1/class_room/edit/{id}', name: 'v1.class_room.edit', methods: ['PATCH'])]
+    public function editClassRoom(string $id, EditClassRoomRequestV1 $request): Response
+    {
+        $request->id = $id;
+
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (ClassRoomDoesNotExist|ClassRoomAlreadyExists $exception) {
+            throw new ValidationError([
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }
