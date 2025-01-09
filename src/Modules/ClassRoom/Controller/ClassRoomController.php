@@ -17,8 +17,8 @@ use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
-use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response as OAResponse;
+use OpenApi\Attributes\Schema;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -114,13 +114,13 @@ final class ClassRoomController extends AbstractController
                                         type: 'string',
                                         format: 'date-time',
                                         example: '2025-01-09T12:34:56Z'
-                                    )
+                                    ),
                                 ]
-                            )
-                        )
+                            ),
+                        ),
                     ]
-                )
-            )
+                ),
+            ),
         ],
     )]
     #[Route('/api/v1/class_room/list', name: 'v1.class_room.list', methods: ['GET'])]
