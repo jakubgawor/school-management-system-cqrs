@@ -10,7 +10,6 @@ use App\Modules\ClassRoom\Request\V1\CreateClassRoom as CreateClassRoomRequestV1
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
-use OpenApi\Attributes\Get;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
