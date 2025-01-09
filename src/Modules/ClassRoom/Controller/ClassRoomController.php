@@ -66,6 +66,7 @@ final class ClassRoomController extends AbstractController
 
     #[Get(
         summary: 'Get list of all class rooms',
+        tags: ['ClassRoom', 'v1'],
         parameters: [
             new Parameter(
                 name: 'page',
@@ -120,7 +121,7 @@ final class ClassRoomController extends AbstractController
                     ]
                 )
             )
-        ]
+        ],
     )]
     #[Route('/api/v1/class_room/list', name: 'v1.class_room.list', methods: ['GET'])]
     public function classRoomList(ClassRoomListQuery $classRoomListQuery): Response
