@@ -35,6 +35,7 @@ final class ClassRoomListQuery
             $data[] = new ClassRoomListDTO(
                 $classRoom->getId(),
                 $classRoom->getName(),
+                $classRoom->getCreatedAt(),
             );
         }
 
