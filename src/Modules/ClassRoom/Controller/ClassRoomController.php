@@ -9,6 +9,7 @@ use App\Modules\ClassRoom\Exception\ClassRoomDoesNotExist;
 use App\Modules\ClassRoom\Query\ClassRoomListQuery;
 use App\Modules\ClassRoom\Request\V1\CreateClassRoom as CreateClassRoomRequestV1;
 use App\Modules\ClassRoom\Request\V1\EditClassRoom as EditClassRoomRequestV1;
+use App\Modules\ClassRoom\Request\V1\RemoveClassRoom as RemoveClassRoomRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
@@ -141,6 +142,20 @@ final class ClassRoomController extends AbstractController
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (ClassRoomDoesNotExist|ClassRoomAlreadyExists $exception) {
+            throw new ValidationError([
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/api/v1/class_room/remove/{id}', name: 'v1.class_room.remove', methods: ['DELETE'])]
+    public function removeClassRoom(string $id): Response
+    {
+        try {
+            $this->syncCommandBus->dispatch(new RemoveClassRoomRequestV1($id)->toCommand());
+        } catch (ClassRoomDoesNotExist $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);

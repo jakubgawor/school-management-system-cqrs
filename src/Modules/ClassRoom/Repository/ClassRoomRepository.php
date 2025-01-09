@@ -65,4 +65,9 @@ class ClassRoomRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function remove(ClassRoom $classRoom): void
+    {
+        $this->entityManager->remove($classRoom);
+    }
 }
