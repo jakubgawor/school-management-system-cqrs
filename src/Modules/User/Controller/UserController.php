@@ -110,8 +110,11 @@ final class UserController extends AbstractController
     #[Security(name: 'Bearer')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/api/v1/user/logout', name: 'v1.user.logout', methods: ['POST'])]
-    public function logout(Request $request, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage): JsonResponse
-    {
+    public function logout(
+        Request $request,
+        EventDispatcherInterface $eventDispatcher,
+        TokenStorageInterface $tokenStorage,
+    ): Response {
         $eventDispatcher->dispatch(new LogoutEvent($request, $tokenStorage->getToken()));
 
         return new JsonResponse([
@@ -342,7 +345,7 @@ final class UserController extends AbstractController
     #[Security(name: 'Bearer')]
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/user/{userId}/change_role', name: 'v1.user.change_role', methods: ['POST'])]
-    public function changeUserRoleV1(string $userId, ChangeUserRoleRequestV1 $request): JsonResponse
+    public function changeUserRoleV1(string $userId, ChangeUserRoleRequestV1 $request): Response
     {
         $request->id = $userId;
 
