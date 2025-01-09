@@ -3,3 +3,9 @@ user:
         path: ../src/Modules/User/Controller/
         namespace: App\Modules\User\Controller
     type: attribute
+
+class_room:
+    resource:
+        path: ../src/Modules/ClassRoom/Controller/
+        namespace: App\Modules\ClassRoom\Controller
+    type: attribute

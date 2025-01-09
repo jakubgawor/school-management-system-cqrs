@@ -31,6 +31,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Modules/Teacher/Entity'
                 prefix: 'App\Modules\Teacher\Entity'
                 alias: App
+            ClassRoom:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Modules/ClassRoom/Entity'
+                prefix: 'App\Modules\ClassRoom\Entity'
+                alias: App
         controller_resolver:
             auto_mapping: false
 

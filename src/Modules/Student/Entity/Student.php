@@ -19,6 +19,9 @@ class Student
     #[Column(type: Types::STRING)]
     private string $userId;
 
+    #[Column(type: Types::STRING)]
+    private string $classRoomId;
+
     public function __construct(
         string $id,
         string $userId,
@@ -35,5 +38,15 @@ class Student
     public function getUserId(): string
     {
         return $this->userId;
+    }
+
+    public function getClassRoomId(): string
+    {
+        return $this->classRoomId;
+    }
+
+    public function setClassRoomId(string $classRoomId): void
+    {
+        $this->classRoomId = $classRoomId;
     }
 }
