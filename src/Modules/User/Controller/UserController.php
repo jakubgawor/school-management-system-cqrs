@@ -280,6 +280,16 @@ final class UserController extends AbstractController
                             format: 'uuid'
                         ),
                         new Property(
+                            property: 'firstName',
+                            description: 'User first name',
+                            type: 'string',
+                        ),
+                        new Property(
+                            property: 'lastName',
+                            description: 'User last name',
+                            type: 'string',
+                        ),
+                        new Property(
                             property: 'email',
                             description: 'User email address',
                             type: 'string',
@@ -308,7 +318,7 @@ final class UserController extends AbstractController
     #[Route('/api/v1/user/me', name: 'v1.user.me', methods: ['GET'])]
     public function meV1(GetUserBasicInfoQuery $getUserBasicInfoQuery): Response
     {
-        return new JsonResponse($getUserBasicInfoQuery->execute($this->getUser()));
+        return new JsonResponse($getUserBasicInfoQuery->execute($this->getUser()->getId()));
     }
 
     #[Post(
