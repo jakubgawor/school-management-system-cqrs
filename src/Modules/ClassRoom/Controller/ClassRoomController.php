@@ -13,10 +13,12 @@ use App\Modules\ClassRoom\Request\V1\RemoveClassRoom as RemoveClassRoomRequestV1
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
+use OpenApi\Attributes\Delete;
 use OpenApi\Attributes\Get;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Parameter;
+use OpenApi\Attributes\Patch;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
@@ -132,6 +134,29 @@ final class ClassRoomController extends AbstractController
         return new JsonResponse($classRoomListQuery->execute());
     }
 
+    #[Patch(
+        summary: 'Edit class room',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['name'],
+                properties: [
+                    new Property(property: 'name', description: 'Class room name', type: 'string'),
+                ],
+                type: 'object'
+            )
+        ),
+        tags: ['ClassRoom', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'id',
+                description: 'Class room id',
+                in: 'path',
+                required: true,
+                schema: new Schema(type: 'string', example: '01944ca2-9658-7828-8e73-058691d26a19')
+            ),
+        ],
+    )]
     #[Route('/api/v1/class_room/edit/{id}', name: 'v1.class_room.edit', methods: ['PATCH'])]
     public function editClassRoom(string $id, EditClassRoomRequestV1 $request): Response
     {
@@ -150,6 +175,19 @@ final class ClassRoomController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    #[Delete(
+        summary: 'Remove class room',
+        tags: ['ClassRoom', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'id',
+                description: 'Class room id',
+                in: 'path',
+                required: true,
+                schema: new Schema(type: 'string', example: '01944ca2-9658-7828-8e73-058691d26a19')
+            ),
+        ],
+    )]
     #[Route('/api/v1/class_room/remove/{id}', name: 'v1.class_room.remove', methods: ['DELETE'])]
     public function removeClassRoom(string $id): Response
     {
