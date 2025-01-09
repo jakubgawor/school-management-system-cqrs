@@ -14,6 +14,7 @@ final class VerifyUserListener
         'v1.user.verify_email',
         'v1.user.resend_verification_code',
         'v1.user.logout',
+        'v1.user.me',
     ];
 
     public function __construct(
