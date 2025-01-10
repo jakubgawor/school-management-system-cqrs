@@ -7,10 +7,12 @@ namespace App\Modules\ClassRoom\Controller;
 use App\Modules\ClassRoom\Exception\ClassRoomAlreadyExists;
 use App\Modules\ClassRoom\Exception\ClassRoomDoesNotExist;
 use App\Modules\ClassRoom\Query\ClassRoomListQuery;
+use App\Modules\ClassRoom\Request\V1\AddStudentToClassRoom as AddStudentToClassRoomRequestV1;
 use App\Modules\ClassRoom\Request\V1\CreateClassRoom as CreateClassRoomRequestV1;
 use App\Modules\ClassRoom\Request\V1\EditClassRoom as EditClassRoomRequestV1;
 use App\Modules\ClassRoom\Request\V1\RemoveClassRoom as RemoveClassRoomRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
+use App\Shared\Exception\BaseException;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
 use OpenApi\Attributes\Delete;
@@ -200,5 +202,48 @@ final class ClassRoomController extends AbstractController
         }
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Post(
+        summary: 'Add student to class room',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['studentId'],
+                properties: [
+                    new Property(property: 'studentId', description: 'Student id', type: 'string'),
+                ],
+                type: 'object'
+            )
+        ),
+        tags: ['ClassRoom', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'id',
+                description: 'Class room id',
+                in: 'path',
+                required: true,
+                schema: new Schema(type: 'string', example: '01944ca2-9658-7828-8e73-058691d26a19')
+            ),
+        ],
+    )]
+    #[Route('/api/v1/class_room/{id}/add-student', name: 'v1.class_room.add_student', methods: ['POST'])]
+    public function addStudentToClassRoom(string $id, AddStudentToClassRoomRequestV1 $request): Response
+    {
+        $request->classRoomId = $id;
+
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (BaseException $exception) {
+            throw new ValidationError([
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse([
+            'status' => 'ok',
+        ], Response::HTTP_OK);
     }
 }

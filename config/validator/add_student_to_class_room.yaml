@@ -1,0 +1,8 @@
+App\Modules\ClassRoom\Request\V1\AddStudentToClassRoom:
+  properties:
+    studentId:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Regex:
+          pattern: '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i'
+          message: 'VALIDATION.INVALID_FORMAT'
