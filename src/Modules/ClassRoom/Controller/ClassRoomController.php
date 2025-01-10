@@ -30,6 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ClassRoomController extends AbstractController
 {
@@ -53,6 +54,7 @@ final class ClassRoomController extends AbstractController
         ),
         tags: ['ClassRoom', 'v1']
     )]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/class_room/create', name: 'v1.class_room.create', methods: ['POST'])]
     public function createClassRoomV1(CreateClassRoomRequestV1 $request): Response
     {
@@ -130,6 +132,7 @@ final class ClassRoomController extends AbstractController
             ),
         ],
     )]
+    #[IsGranted('ROLE_TEACHER')]
     #[Route('/api/v1/class_room/list', name: 'v1.class_room.list', methods: ['GET'])]
     public function classRoomList(ClassRoomListQuery $classRoomListQuery): Response
     {
@@ -159,6 +162,7 @@ final class ClassRoomController extends AbstractController
             ),
         ],
     )]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/class_room/edit/{id}', name: 'v1.class_room.edit', methods: ['PATCH'])]
     public function editClassRoom(string $id, EditClassRoomRequestV1 $request): Response
     {
@@ -190,6 +194,7 @@ final class ClassRoomController extends AbstractController
             ),
         ],
     )]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/class_room/remove/{id}', name: 'v1.class_room.remove', methods: ['DELETE'])]
     public function removeClassRoom(string $id): Response
     {
@@ -227,6 +232,7 @@ final class ClassRoomController extends AbstractController
             ),
         ],
     )]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/class_room/{id}/add-student', name: 'v1.class_room.add_student', methods: ['POST'])]
     public function addStudentToClassRoomV1(string $id, AddStudentToClassRoomRequestV1 $request): Response
     {
