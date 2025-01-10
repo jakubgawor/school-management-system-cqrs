@@ -66,6 +66,18 @@ class ClassRoomRepository
             ->getSingleScalarResult();
     }
 
+    public function countStudentsInClassRoom(string $id): int
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('count(c.id)')
+            ->from(ClassRoom::class, 'c')
+            ->where('c.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function remove(ClassRoom $classRoom): void
     {
         $this->entityManager->remove($classRoom);
