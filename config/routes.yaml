@@ -9,3 +9,9 @@ class_room:
         path: ../src/Modules/ClassRoom/Controller/
         namespace: App\Modules\ClassRoom\Controller
     type: attribute
+
+student:
+    resource:
+        path: ../src/Modules/Student/Controller/
+        namespace: App\Modules\Student\Controller
+    type: attribute
