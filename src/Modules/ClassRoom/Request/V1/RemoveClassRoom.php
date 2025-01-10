@@ -10,7 +10,7 @@ use App\Shared\Request\RequestInterface;
 final class RemoveClassRoom implements RequestInterface
 {
     public function __construct(
-        public string $id,
+        public mixed $id,
     ) {
     }
 
