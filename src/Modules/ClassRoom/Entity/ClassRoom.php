@@ -25,7 +25,7 @@ class ClassRoom
     private DateTimeImmutable $createdAt;
 
     #[Column(type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $updatedAt;
+    private ?DateTimeImmutable $updatedAt;
 
     public function __construct(
         string $id,
@@ -56,7 +56,7 @@ class ClassRoom
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
