@@ -48,4 +48,16 @@ final class StudentRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findStudentAssignedToClassRoom(string $classRoomId): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('s')
+            ->from(Student::class, 's')
+            ->where('s.classRoomId = :classRoomId')
+            ->setParameter('classRoomId', $classRoomId)
+            ->getQuery()
+            ->getResult();
+    }
 }

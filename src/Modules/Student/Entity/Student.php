@@ -20,7 +20,7 @@ class Student
     private string $userId;
 
     #[Column(type: Types::STRING)]
-    private string $classRoomId;
+    private ?string $classRoomId;
 
     public function __construct(
         string $id,
@@ -40,12 +40,12 @@ class Student
         return $this->userId;
     }
 
-    public function getClassRoomId(): string
+    public function getClassRoomId(): ?string
     {
         return $this->classRoomId;
     }
 
-    public function setClassRoomId(string $classRoomId): void
+    public function setClassRoomId(?string $classRoomId): void
     {
         $this->classRoomId = $classRoomId;
     }
