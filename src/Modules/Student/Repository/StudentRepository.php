@@ -36,4 +36,16 @@ final class StudentRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findStudentById(string $id): ?Student
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('s')
+            ->from(Student::class, 's')
+            ->where('s.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
