@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Controller;
 
+use App\Modules\User\Exception\PasswordsDoNotMatch;
 use App\Modules\User\Exception\RoleAlreadyAssigned;
 use App\Modules\User\Exception\TokenCooldownViolation;
 use App\Modules\User\Exception\TokenDoesNotExists;
@@ -237,10 +238,11 @@ final class UserController extends AbstractController
         requestBody: new RequestBody(
             required: true,
             content: new JsonContent(
-                required: ['email', 'password', 'token'],
+                required: ['email', 'password', 'repeatPassword', 'token'],
                 properties: [
                     new Property(property: 'email', description: 'Email address', type: 'string', format: 'email'),
-                    new Property(property: 'password', description: 'New password', type: 'string', format: 'email'),
+                    new Property(property: 'password', description: 'New password', type: 'string'),
+                    new Property(property: 'repeatPassword', description: 'Repeat password', type: 'string'),
                     new Property(property: 'token', description: 'Verification token', type: 'string'),
                 ],
                 type: 'object'
@@ -256,7 +258,7 @@ final class UserController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (UserNotFound|TokenDoesNotExists|TokenExpired $exception) {
+        } catch (UserNotFound|TokenDoesNotExists|TokenExpired|PasswordsDoNotMatch $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);

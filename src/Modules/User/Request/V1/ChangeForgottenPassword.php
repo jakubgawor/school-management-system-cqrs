@@ -12,6 +12,7 @@ final readonly class ChangeForgottenPassword implements RequestInterface
     public function __construct(
         public mixed $email,
         public mixed $password,
+        public mixed $repeatPassword,
         public mixed $token,
     ) {
     }
@@ -21,6 +22,7 @@ final readonly class ChangeForgottenPassword implements RequestInterface
         return new Command(
             $this->email,
             $this->password,
+            $this->repeatPassword,
             $this->token,
         );
     }
