@@ -12,6 +12,7 @@ use App\Modules\User\Exception\TokenExpired;
 use App\Modules\User\Exception\UserAlreadyExists;
 use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Query\GetUserBasicInfoQuery;
+use App\Modules\User\Query\UsersListQuery;
 use App\Modules\User\Request\V1\ChangeForgottenPassword as ChangeForgottenPasswordRequestV1;
 use App\Modules\User\Request\V1\ChangeUserRole as ChangeUserRoleRequestV1;
 use App\Modules\User\Request\V1\RequestPasswordChange as RequestPasswordChangeRequestV1;
@@ -364,5 +365,11 @@ final class UserController extends AbstractController
         return new JsonResponse([
             'status' => 'ok',
         ], Response::HTTP_OK);
+    }
+
+    #[Route('/api/v1/users/list', name: 'v1.users.list', methods: ['GET'])]
+    public function usersList(UsersListQuery $query): Response
+    {
+        return new JsonResponse($query->execute());
     }
 }

@@ -58,4 +58,27 @@ final class UserRepository
     {
         $this->entityManager->persist($user);
     }
+
+    public function findPaginatedUsers(int $page, int $limit): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->orderBy('u.lastName', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countUsers(): int
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('count(u.id)')
+            ->from(User::class, 'u')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
