@@ -26,10 +26,12 @@ use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes\Get;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\JsonContent;
+use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
 use OpenApi\Attributes\Response as OAResponse;
+use OpenApi\Attributes\Schema;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -367,6 +369,63 @@ final class UserController extends AbstractController
         ], Response::HTTP_OK);
     }
 
+    #[Get(
+        summary: 'Get list of users',
+        tags: ['User', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'page',
+                description: 'Page number',
+                in: 'query',
+                required: false,
+                schema: new Schema(type: 'integer', example: 2)
+            ),
+            new Parameter(
+                name: 'limit',
+                description: 'Limit number of results',
+                in: 'query',
+                required: false,
+                schema: new Schema(type: 'integer', example: 20)
+            ),
+        ],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Returns paginated list of all class rooms',
+                content: new JsonContent(
+                    properties: [
+                        new Property(property: 'page', type: 'integer', example: 2),
+                        new Property(property: 'limit', type: 'integer', example: 7),
+                        new Property(property: 'total', type: 'integer', example: 16),
+                        new Property(property: 'totalPages', type: 'integer', example: 3),
+                        new Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new Items(
+                                properties: [
+                                    new Property(property: 'id', type: 'string', format: 'uuid'),
+                                    new Property(property: 'firstName', type: 'string'),
+                                    new Property(property: 'lastName', type: 'string'),
+                                    new Property(property: 'email', type: 'string'),
+                                    new Property(
+                                        property: 'createdAt',
+                                        properties: [
+                                            new Property(property: 'date', type: 'string', format: 'date-time'),
+                                            new Property(property: 'timezone_type', type: 'integer', example: 3),
+                                            new Property(property: 'timezone', type: 'string', example: 'UTC'),
+                                        ],
+                                        type: 'object'
+                                    ),
+                                    new Property(property: 'isVerified', type: 'boolean'),
+                                    new Property(property: 'role', type: 'string', example: 'ROLE_ADMIN'),
+                                ]
+                            ),
+                        ),
+                    ]
+                ),
+            ),
+        ],
+    )]
     #[Route('/api/v1/users/list', name: 'v1.users.list', methods: ['GET'])]
     public function usersList(UsersListQuery $query): Response
     {
