@@ -426,6 +426,7 @@ final class UserController extends AbstractController
             ),
         ],
     )]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/users/list', name: 'v1.users.list', methods: ['GET'])]
     public function usersList(UsersListQuery $query): Response
     {
