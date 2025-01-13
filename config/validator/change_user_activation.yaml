@@ -1,0 +1,8 @@
+App\Modules\User\Request\V1\ChangeUserActivation:
+  properties:
+    isActivated:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Type:
+          type: bool
+          message: 'VALIDATION.INVALID_FORMAT'

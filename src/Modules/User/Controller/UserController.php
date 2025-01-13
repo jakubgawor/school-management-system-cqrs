@@ -14,6 +14,7 @@ use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Query\GetUserBasicInfoQuery;
 use App\Modules\User\Query\UsersListQuery;
 use App\Modules\User\Request\V1\ChangeForgottenPassword as ChangeForgottenPasswordRequestV1;
+use App\Modules\User\Request\V1\ChangeUserActivation as ChangeUserActivationRequestV1;
 use App\Modules\User\Request\V1\ChangeUserRole as ChangeUserRoleRequestV1;
 use App\Modules\User\Request\V1\RequestPasswordChange as RequestPasswordChangeRequestV1;
 use App\Modules\User\Request\V1\ResendVerificationCode as ResendVerificationCodeRequestV1;
@@ -27,6 +28,7 @@ use OpenApi\Attributes\Get;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Parameter;
+use OpenApi\Attributes\Patch;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
@@ -311,6 +313,11 @@ final class UserController extends AbstractController
                                 type: 'string'
                             )
                         ),
+                        new Property(
+                            property: 'isActivated',
+                            description: 'Is user activated',
+                            type: 'boolean',
+                        ),
                     ],
                     type: 'object'
                 ),
@@ -431,5 +438,44 @@ final class UserController extends AbstractController
     public function usersList(UsersListQuery $query): Response
     {
         return new JsonResponse($query->execute());
+    }
+
+    #[Patch(
+        summary: 'Change user activation',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['isActivated'],
+                properties: [
+                    new Property(property: 'isActivated', type: 'boolean'),
+                ],
+                type: 'object',
+            ),
+        ),
+        tags: ['User', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'userId',
+                description: 'User ID',
+                in: 'path',
+                required: true,
+            ),
+        ],
+    )]
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/user/{userId}/change-activation', name: 'v1.user.change_activation', methods: ['PATCH'])]
+    public function changeUserActivation(string $userId, ChangeUserActivationRequestV1 $request): Response
+    {
+        $request->userId = $userId;
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (UserNotFound $exception) {
+            throw new ValidationError([
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }

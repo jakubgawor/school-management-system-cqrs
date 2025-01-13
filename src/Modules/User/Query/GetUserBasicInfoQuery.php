@@ -24,6 +24,7 @@ final class GetUserBasicInfoQuery
             $user->getLastName(),
             $user->getEmail(),
             $user->getRoles(),
+            $user->isActivated(),
         );
     }
 }
