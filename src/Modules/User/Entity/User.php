@@ -38,6 +38,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Column(type: Types::BOOLEAN)]
     private bool $isVerified;
 
+    #[Column(type: Types::BOOLEAN)]
+    private bool $isActivated;
+
     #[Column(type: Types::JSON)]
     private array $roles;
 
@@ -45,6 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->createdAt = new DateTimeImmutable();
         $this->isVerified = false;
+        $this->isActivated = false;
         $this->roles = ['ROLE_USER'];
     }
 
@@ -119,6 +123,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function isActivated(): bool
+    {
+        return $this->isActivated;
+    }
+
+    public function setIsActivated(bool $isActivated): void
+    {
+        $this->isActivated = $isActivated;
     }
 
     public function getRoles(): array
