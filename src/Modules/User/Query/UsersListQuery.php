@@ -41,6 +41,7 @@ final class UsersListQuery
                 $user->getEmail(),
                 $user->getCreatedAt(),
                 $user->isVerified(),
+                $user->isActivated(),
                 $user->getRoles()[0]
             );
         }
@@ -49,7 +50,7 @@ final class UsersListQuery
             'page' => $page,
             'limit' => $limit,
             'total' => $totalCount,
-            'totalPaged' => ceil($totalCount / $limit),
+            'totalPages' => ceil($totalCount / $limit),
             'data' => $data,
         ];
     }

@@ -15,6 +15,7 @@ final readonly class UserInfo
         public string $email,
         public DateTimeImmutable $createdAt,
         public bool $isVerified,
+        public bool $isActivated,
         public string $role,
     ) {
     }
