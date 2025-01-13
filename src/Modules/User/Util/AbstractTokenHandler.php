@@ -9,28 +9,25 @@ use App\Modules\User\Entity\UserVerificationToken;
 use App\Modules\User\Enum\TokenType;
 use App\Modules\User\Exception\TokenDoesNotExists;
 use App\Modules\User\Exception\TokenExpired;
-use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Repository\UserVerificationTokenRepository;
+use App\Modules\User\Service\UserFetcherService;
 
 abstract class AbstractTokenHandler
 {
     public function __construct(
         protected UserRepository $userRepository,
         protected UserVerificationTokenRepository $userVerificationTokenRepository,
+        protected UserFetcherService $userFetcherService,
     ) {
     }
 
     protected function getUserOrFail(string $email, bool $mustBeNotVerified = false): User
     {
         if ($mustBeNotVerified) {
-            $user = $this->userRepository->findNotVerifiedByEmail($email);
+            $user = $this->userFetcherService->getNotVerifiedByEmailOrFail($email);
         } else {
-            $user = $this->userRepository->findByEmail($email);
-        }
-
-        if (! $user) {
-            throw new UserNotFound();
+            $user = $this->userFetcherService->getByEmailOrFail($email);
         }
 
         return $user;

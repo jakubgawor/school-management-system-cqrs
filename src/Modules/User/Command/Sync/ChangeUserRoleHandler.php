@@ -6,8 +6,8 @@ namespace App\Modules\User\Command\Sync;
 
 use App\Modules\User\Event\UserRoleChanged;
 use App\Modules\User\Exception\RoleAlreadyAssigned;
-use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Repository\UserRepository;
+use App\Modules\User\Service\UserFetcherService;
 use App\Shared\Command\Sync\CommandHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -16,15 +16,13 @@ class ChangeUserRoleHandler implements CommandHandler
     public function __construct(
         private UserRepository $userRepository,
         private EventDispatcherInterface $eventDispatcher,
+        private UserFetcherService $userFetcherService,
     ) {
     }
 
     public function __invoke(ChangeUserRole $command): void
     {
-        $user = $this->userRepository->findById($command->id);
-        if (! $user) {
-            throw new UserNotFound();
-        }
+        $user = $this->userFetcherService->getByIdOrFail($command->id);
 
         if (in_array($command->role, $user->getRoles(), true)) {
             throw new RoleAlreadyAssigned();

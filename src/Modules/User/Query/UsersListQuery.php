@@ -23,7 +23,6 @@ final class UsersListQuery
 
         $page = max(1, $request->query->getInt('page', 1));
         $limit = max(1, $request->query->getInt('limit', 10));
-
         if ($limit > 50) {
             $limit = 50;
         }

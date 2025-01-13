@@ -6,7 +6,7 @@ namespace App\Modules\User\Exception;
 
 use App\Shared\Exception\BaseException;
 
-class TokenCooldownViolation extends BaseException
+final class TokenCooldownViolation extends BaseException
 {
     public function __construct()
     {

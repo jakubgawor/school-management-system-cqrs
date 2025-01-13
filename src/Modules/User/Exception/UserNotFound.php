@@ -6,7 +6,7 @@ namespace App\Modules\User\Exception;
 
 use App\Shared\Exception\BaseException;
 
-class UserNotFound extends BaseException
+final class UserNotFound extends BaseException
 {
     public function __construct()
     {

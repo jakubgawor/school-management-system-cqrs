@@ -7,7 +7,7 @@ namespace App\Modules\User\Exception;
 use App\Shared\Exception\BaseException;
 use Throwable;
 
-class InvalidJwtToken extends BaseException
+final class InvalidJwtToken extends BaseException
 {
     public function __construct(Throwable $previous)
     {

@@ -6,7 +6,7 @@ namespace App\Modules\User\Exception;
 
 use App\Shared\Exception\BaseException;
 
-class UserIsNotVerified extends BaseException
+final class UserIsNotVerified extends BaseException
 {
     public function __construct()
     {
