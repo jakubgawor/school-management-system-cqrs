@@ -18,4 +18,16 @@ final class SubjectRepository
     {
         $this->entityManager->persist($subject);
     }
+
+    public function countSubjectsByTeacherId(string $teacherId): int
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('count(s.teacherId)')
+            ->from(Subject::class, 's')
+            ->where('s.teacherId = :teacherId')
+            ->setParameter('teacherId', $teacherId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

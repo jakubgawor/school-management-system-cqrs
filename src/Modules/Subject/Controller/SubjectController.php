@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Subject\Controller;
 
+use App\Modules\Subject\Exception\TeacherAlreadyAssignedSubject;
+use App\Modules\Subject\Exception\TeacherDoesNotExist;
 use App\Modules\Subject\Request\V1\CreateSubject as CreateSubjectRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
@@ -50,7 +52,7 @@ final class SubjectController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (\Throwable $exception) {
+        } catch (TeacherDoesNotExist|TeacherAlreadyAssignedSubject $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
