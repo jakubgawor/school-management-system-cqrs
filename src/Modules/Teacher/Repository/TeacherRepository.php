@@ -29,11 +29,16 @@ final class TeacherRepository
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
         return $queryBuilder
-            ->select('s')
-            ->from(Teacher::class, 's')
+            ->select('t')
+            ->from(Teacher::class, 't')
             ->where('s.userId = :userId')
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findById(string $teacherId): ?Teacher
+    {
+        return $this->entityManager->find(Teacher::class, $teacherId);
     }
 }
