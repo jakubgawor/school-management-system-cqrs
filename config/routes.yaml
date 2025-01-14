@@ -15,3 +15,9 @@ student:
         path: ../src/Modules/Student/Controller/
         namespace: App\Modules\Student\Controller
     type: attribute
+
+subject:
+    resource:
+        path: ../src/Modules/Subject/Controller/
+        namespace: App\Modules\Subject\Controller
+    type: attribute
