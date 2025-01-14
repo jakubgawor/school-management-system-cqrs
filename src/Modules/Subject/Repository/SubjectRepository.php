@@ -30,4 +30,9 @@ final class SubjectRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function findSubjectById(string $id): ?Subject
+    {
+        return $this->entityManager->find(Subject::class, $id);
+    }
 }

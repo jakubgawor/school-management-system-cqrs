@@ -1,0 +1,12 @@
+App\Modules\Subject\Request\V1\AssignClassRoomToSubject:
+  properties:
+    classRoomId:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Regex:
+          pattern: '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i'
+          message: 'VALIDATION.INVALID_FORMAT'
+    subjectId:
+      - Regex:
+          pattern: '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i'
+          message: 'VALIDATION.INVALID_FORMAT'
