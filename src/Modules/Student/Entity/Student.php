@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Student\Entity;
 
+use App\Modules\Student\Repository\StudentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
 
-#[Entity]
+#[Entity(repositoryClass: StudentRepository::class)]
 class Student
 {
     #[Id]
