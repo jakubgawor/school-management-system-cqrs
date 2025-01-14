@@ -8,6 +8,10 @@ use App\Modules\Subject\Request\V1\CreateSubject as CreateSubjectRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
+use OpenApi\Attributes\JsonContent;
+use OpenApi\Attributes\Post;
+use OpenApi\Attributes\Property;
+use OpenApi\Attributes\RequestBody;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +26,23 @@ final class SubjectController extends AbstractController
     ) {
     }
 
-//    #[IsGranted('ROLE_ADMIN')]
+    #[Post(
+        summary: 'Create subject',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['teacherId', 'name'],
+                properties: [
+                    new Property(property: 'teacherId', type: 'string', format: 'uuid'),
+                    new Property(property: 'name', type: 'string'),
+                    new Property(property: 'description', type: 'string'),
+                ],
+                type: 'object',
+            ),
+        ),
+        tags: ['Subject', 'v1'],
+    )]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/subject/create', name: 'v1.subject.create', methods: ['POST'])]
     public function createSubject(CreateSubjectRequestV1 $request): Response
     {
