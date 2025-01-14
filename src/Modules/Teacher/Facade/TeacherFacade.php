@@ -15,6 +15,6 @@ final class TeacherFacade
 
     public function existsTeacherById(string $teacherId): bool
     {
-        return (bool)$this->teacherRepository->findById($teacherId);
+        return (bool) $this->teacherRepository->findById($teacherId);
     }
 }

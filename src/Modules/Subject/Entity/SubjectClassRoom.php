@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Subject\Entity;
 
 use App\Modules\Subject\Repository\SubjectClassRoomRepository;
