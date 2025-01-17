@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Modules\User\Command\Sync;
 
 use App\Modules\User\Event\UserRoleChanged;
+use App\Modules\User\Exception\CannotChangeOwnRole;
 use App\Modules\User\Exception\RoleAlreadyAssigned;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\UserFetcherService;
 use App\Shared\Command\Sync\CommandHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ChangeUserRoleHandler implements CommandHandler
 {
@@ -17,11 +19,16 @@ class ChangeUserRoleHandler implements CommandHandler
         private UserRepository $userRepository,
         private EventDispatcherInterface $eventDispatcher,
         private UserFetcherService $userFetcherService,
+        private TokenStorageInterface $tokenStorage,
     ) {
     }
 
     public function __invoke(ChangeUserRole $command): void
     {
+        if ($command->id === $this->tokenStorage->getToken()->getUser()->getId()) {
+            throw new CannotChangeOwnRole();
+        }
+
         $user = $this->userFetcherService->getByIdOrFail($command->id);
 
         if (in_array($command->role, $user->getRoles(), true)) {
