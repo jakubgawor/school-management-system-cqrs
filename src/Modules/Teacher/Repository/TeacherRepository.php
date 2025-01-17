@@ -31,7 +31,7 @@ final class TeacherRepository
         return $queryBuilder
             ->select('t')
             ->from(Teacher::class, 't')
-            ->where('s.userId = :userId')
+            ->where('t.userId = :userId')
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getOneOrNullResult();
