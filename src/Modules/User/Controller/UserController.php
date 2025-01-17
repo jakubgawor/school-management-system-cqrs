@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Controller;
 
+use App\Modules\User\Exception\CannotChangeOwnActivation;
 use App\Modules\User\Exception\CannotChangeOwnRole;
 use App\Modules\User\Exception\PasswordsDoNotMatch;
 use App\Modules\User\Exception\RoleAlreadyAssigned;
@@ -471,7 +472,7 @@ final class UserController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (UserNotFound $exception) {
+        } catch (UserNotFound|CannotChangeOwnActivation $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
