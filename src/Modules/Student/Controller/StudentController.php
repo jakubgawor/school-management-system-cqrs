@@ -38,7 +38,7 @@ final class StudentController extends AbstractController
             ),
         ],
     )]
-    #[Route('/api/v1/student/{id}/remove-class-room', name: 'v1.student.remove_student_class_room', methods: ['DELETE'])]
+    #[Route('/api/v1/student/{id}/remove_class_room', name: 'v1.student.remove_student_class_room', methods: ['DELETE'])]
     public function removeStudentClassRoom(string $id): Response
     {
         try {

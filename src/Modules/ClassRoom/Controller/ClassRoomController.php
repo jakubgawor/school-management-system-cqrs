@@ -233,7 +233,7 @@ final class ClassRoomController extends AbstractController
         ],
     )]
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/api/v1/class_room/{id}/add-student', name: 'v1.class_room.add_student', methods: ['POST'])]
+    #[Route('/api/v1/class_room/{id}/add_student', name: 'v1.class_room.add_student', methods: ['POST'])]
     public function addStudentToClassRoomV1(string $id, AddStudentToClassRoomRequestV1 $request): Response
     {
         $request->classRoomId = $id;

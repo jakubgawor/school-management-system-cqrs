@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Controller;
 
+use App\Modules\User\Exception\CannotChangeOwnRole;
 use App\Modules\User\Exception\PasswordsDoNotMatch;
 use App\Modules\User\Exception\RoleAlreadyAssigned;
 use App\Modules\User\Exception\TokenCooldownViolation;
@@ -365,7 +366,7 @@ final class UserController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (UserNotFound|RoleAlreadyAssigned $exception) {
+        } catch (UserNotFound|RoleAlreadyAssigned|CannotChangeOwnRole $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
@@ -463,7 +464,7 @@ final class UserController extends AbstractController
         ],
     )]
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/api/v1/user/{userId}/change-activation', name: 'v1.user.change_activation', methods: ['PATCH'])]
+    #[Route('/api/v1/user/{userId}/change_activation', name: 'v1.user.change_activation', methods: ['PATCH'])]
     public function changeUserActivation(string $userId, ChangeUserActivationRequestV1 $request): Response
     {
         $request->userId = $userId;
