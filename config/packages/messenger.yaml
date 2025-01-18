@@ -19,20 +19,18 @@ framework:
             sync:
                 dsn: 'sync://'
             async:
-                dsn: '%env(MESSENGER_DOCTRINE_TRANSPORT_DSN)%'
+                dsn: '%env(RABBITMQ_TRANSPORT)%'
                 options:
-                    queue_name: async
                     auto_setup: false
                 retry_strategy:
                     max_retries: 3
                     delay: 1000
                     multiplier: 2
             failed:
-                dsn: '%env(MESSENGER_DOCTRINE_TRANSPORT_DSN)%'
+                dsn: '%env(RABBITMQ_TRANSPORT)%'
                 options:
-                    queue_name: failed
                     auto_setup: false
         failure_transport: failed
         routing:
             App\Shared\Command\Sync\Command: sync
-            App\Shared\Command\ASync\Command: async
+            App\Shared\Command\Async\Command: async

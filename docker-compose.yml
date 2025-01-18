@@ -24,6 +24,7 @@ services:
       - database
       - mailpit
       - redis
+      - rabbitmq
 
   database:
     image: mariadb:10.11.2
@@ -55,6 +56,17 @@ services:
     container_name: 'redis'
     ports:
       - '6379:6379'
+    restart: on-failure
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: 'root'
+      RABBITMQ_DEFAULT_PASS: 'root'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
     restart: on-failure
 
 volumes:
