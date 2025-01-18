@@ -56,16 +56,6 @@ class ClassRoomRepository
             ->getResult();
     }
 
-    public function countClassRooms(): int
-    {
-        return $this->entityManager
-            ->createQueryBuilder()
-            ->select('count(c.id)')
-            ->from(ClassRoom::class, 'c')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
     public function countStudentsInClassRoom(string $id): int
     {
         return $this->entityManager
