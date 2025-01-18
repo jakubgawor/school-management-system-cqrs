@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Student\Repository;
 
 use App\Modules\Student\Entity\Student;
+use App\Modules\User\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class StudentRepository
@@ -59,5 +60,36 @@ final class StudentRepository
             ->setParameter('classRoomId', $classRoomId)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findPaginatedStudents(int $page, int $limit, ?string $searchPhrase = null): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('s.id', 's.userId', 'u.firstName', 'u.lastName', 'u.email')
+            ->from(Student::class, 's')
+            ->join(User::class, 'u', 'u.id = s.userId')
+            ->where('u.email like :searchPhrase')
+            ->orWhere('concat(u.firstName, concat(\' \', u.lastName)) like :searchPhrase')
+            ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->orderBy('u.lastName', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getCountOfPaginatedStudents(?string $searchPhrase = null): int
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('count(s.id)')
+            ->from(Student::class, 's')
+            ->join(User::class, 'u', 'u.id = s.userId')
+            ->where('u.email like :searchPhrase')
+            ->orWhere('concat(u.firstName, concat(\' \', u.lastName)) like :searchPhrase')
+            ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }
