@@ -29,7 +29,7 @@ final class UsersListQuery
         }
 
         $users = $this->userRepository->findPaginatedUsers($page, $limit, $searchPhrase);
-        $totalCount = count($users);
+        $totalCount = $this->userRepository->getCountOfPaginatedUsers($searchPhrase);
 
         $data = [];
         /** @var User $user */

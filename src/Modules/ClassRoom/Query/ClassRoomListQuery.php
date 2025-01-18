@@ -29,7 +29,7 @@ final class ClassRoomListQuery
         }
 
         $classRooms = $this->classRoomRepository->findPaginatedClassRooms($page, $limit);
-        $totalCount = count($classRooms);
+        $totalCount = $this->classRoomRepository->countClassRooms();;
 
         $data = [];
         /** @var ClassRoom $classRoom */

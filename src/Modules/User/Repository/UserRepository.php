@@ -74,4 +74,17 @@ final class UserRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getCountOfPaginatedUsers(?string $searchPhrase = null): int
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('count(u.id)')
+            ->from(User::class, 'u')
+            ->where('u.email like :searchPhrase')
+            ->orWhere('concat(u.firstName, concat(\' \', u.lastName)) like :searchPhrase')
+            ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
