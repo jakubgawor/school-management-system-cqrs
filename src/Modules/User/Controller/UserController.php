@@ -387,14 +387,21 @@ final class UserController extends AbstractController
                 description: 'Page number',
                 in: 'query',
                 required: false,
-                schema: new Schema(type: 'integer', example: 2)
+                schema: new Schema(type: 'integer'),
             ),
             new Parameter(
                 name: 'limit',
                 description: 'Limit number of results',
                 in: 'query',
                 required: false,
-                schema: new Schema(type: 'integer', example: 20)
+                schema: new Schema(type: 'integer'),
+            ),
+            new Parameter(
+                name: 'searchPhrase',
+                description: 'Search phrase for user (first name, last name and email)',
+                in: 'query',
+                required: false,
+                schema: new Schema(type: 'string'),
             ),
         ],
         responses: [

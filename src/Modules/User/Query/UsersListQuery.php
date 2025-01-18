@@ -21,13 +21,14 @@ final class UsersListQuery
     {
         $request = $this->requestStack->getCurrentRequest();
 
+        $searchPhrase = $request->get('searchPhrase');
         $page = max(1, $request->query->getInt('page', 1));
         $limit = max(1, $request->query->getInt('limit', 10));
         if ($limit > 50) {
             $limit = 50;
         }
 
-        $users = $this->userRepository->findPaginatedUsers($page, $limit);
+        $users = $this->userRepository->findPaginatedUsers($page, $limit, $searchPhrase);
         $totalCount = count($users);
 
         $data = [];
