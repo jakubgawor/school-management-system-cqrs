@@ -28,7 +28,7 @@ final class UsersListQuery
         }
 
         $users = $this->userRepository->findPaginatedUsers($page, $limit);
-        $totalCount = $this->userRepository->countUsers();
+        $totalCount = count($users);
 
         $data = [];
         /** @var User $user */
