@@ -7,11 +7,16 @@ namespace App\Modules\Subject\Controller;
 use App\Modules\Subject\Exception\SubjectDoesNotExist;
 use App\Modules\Subject\Exception\TeacherAlreadyAssignedSubject;
 use App\Modules\Subject\Exception\TeacherDoesNotExist;
+use App\Modules\Subject\Query\AllSubjectsListQuery;
 use App\Modules\Subject\Request\V1\AssignClassRoomToSubject as AssignClassRoomToSubjectRequestV1;
 use App\Modules\Subject\Request\V1\CreateSubject as CreateSubjectRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
+use OpenApi\Attributes\AdditionalProperties;
+use OpenApi\Attributes\Items;
+use OpenApi\Attributes\Response as OAResponse;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
+use OpenApi\Attributes\Get;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
@@ -98,5 +103,53 @@ final class SubjectController extends AbstractController
         return new JsonResponse([
             'status' => 'ok',
         ], Response::HTTP_OK);
+    }
+
+    #[Get(
+        summary: 'Get list of all subjects with class rooms and teacher info',
+        tags: ['Subject', 'v1'],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Get list of all subjects with class rooms and teacher info',
+                content: new JsonContent(
+                    type: 'object',
+                    additionalProperties: new AdditionalProperties(
+                        properties: [
+                            new Property(property: 'id', type: 'string'),
+                            new Property(property: 'name', type: 'string'),
+                            new Property(property: 'description', type: 'string'),
+                            new Property(
+                                property: 'classRooms',
+                                type: 'array',
+                                items: new Items(
+                                    properties: [
+                                        new Property(property: 'id', type: 'string'),
+                                        new Property(property: 'name', type: 'string'),
+                                    ],
+                                    type: 'object'
+                                ),
+                            ),
+                            new Property(
+                                property: 'teacher',
+                                properties: [
+                                    new Property(property: 'id', type: 'string'),
+                                    new Property(property: 'firstName', type: 'string'),
+                                    new Property(property: 'lastName', type: 'string'),
+                                ],
+                                type: 'object'
+                            ),
+                        ],
+                        type: 'object'
+                    ),
+                ),
+            ),
+        ],
+    )]
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/subjects/list', name: 'v1.subjects.list', methods: ['GET'])]
+    public function allSubjectsList(AllSubjectsListQuery $query): Response
+    {
+        return new JsonResponse($query->execute());
     }
 }
