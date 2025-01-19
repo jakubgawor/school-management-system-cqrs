@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\ClassRoom\Query\Result;
+namespace App\Modules\User\Query\DTO;
 
-final readonly class StudentAssignedToClassInfo
+final readonly class UserBasicInfo
 {
     public function __construct(
-        public string $studentId,
+        public string $id,
         public string $firstName,
         public string $lastName,
         public string $email,
+        public array $roles,
+        public bool $isActivated,
     ) {
     }
 }

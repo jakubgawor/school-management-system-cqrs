@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Query;
 
-use App\Modules\User\Query\Result\UserBasicInfo as UserBasicInfoDTO;
+use App\Modules\User\Query\DTO\UserBasicInfo as UserBasicInfoDTO;
 use App\Modules\User\Repository\UserRepository;
 
 final class GetUserBasicInfoQuery

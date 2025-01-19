@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\User\Query\Result;
+namespace App\Modules\User\Query\DTO;
 
 use DateTimeImmutable;
 

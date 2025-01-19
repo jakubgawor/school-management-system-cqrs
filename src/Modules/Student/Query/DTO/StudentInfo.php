@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Student\Query\Result;
+namespace App\Modules\Student\Query\DTO;
 
 final readonly class StudentInfo
 {

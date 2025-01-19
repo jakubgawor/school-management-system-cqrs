@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\ClassRoom\Query;
 
-use App\Modules\ClassRoom\Query\Result\StudentAssignedToClassInfo;
+use App\Modules\ClassRoom\Query\DTO\StudentAssignedToClassInfo;
 use App\Modules\ClassRoom\Repository\ClassRoomRepository;
 
 final class StudentsListAssignedToClassRoom

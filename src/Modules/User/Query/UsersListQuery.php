@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\User\Query;
 
 use App\Modules\User\Entity\User;
-use App\Modules\User\Query\Result\UserInfo as UserInfoDTO;
+use App\Modules\User\Query\DTO\UserInfo as UserInfoDTO;
 use App\Modules\User\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 

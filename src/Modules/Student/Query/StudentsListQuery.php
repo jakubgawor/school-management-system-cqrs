@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Student\Query;
 
-use App\Modules\Student\Query\Result\StudentInfo;
+use App\Modules\Student\Query\DTO\StudentInfo;
 use App\Modules\Student\Repository\StudentRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 
