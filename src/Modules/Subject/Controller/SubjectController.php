@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Subject\Controller;
 
+use App\Modules\Subject\Exception\AssignationNotFound;
 use App\Modules\Subject\Exception\SubjectDoesNotExist;
 use App\Modules\Subject\Exception\TeacherAlreadyAssignedSubject;
 use App\Modules\Subject\Exception\TeacherDoesNotExist;
@@ -11,6 +12,7 @@ use App\Modules\Subject\Query\AllSubjectsListQuery;
 use App\Modules\Subject\Request\V1\AssignClassRoomToSubject as AssignClassRoomToSubjectRequestV1;
 use App\Modules\Subject\Request\V1\CreateSubject as CreateSubjectRequestV1;
 use App\Modules\Subject\Request\V1\EditSubject as EditSubjectRequestV1;
+use App\Modules\Subject\Request\V1\UnassignClassRoomFromSubject as UnassignClassRoomFromSubjectRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
@@ -109,6 +111,41 @@ final class SubjectController extends AbstractController
         ], Response::HTTP_OK);
     }
 
+    #[Post(
+        summary: 'Unassign class room from subject',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['classRoomId'],
+                properties: [
+                    new Property(property: 'classRoomId', type: 'string', format: 'uuid'),
+                ],
+                type: 'object',
+            ),
+        ),
+        tags: ['Subject', 'v1'],
+    )]
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/v1/subject/{subjectId}/unassign', name: 'v1.subject.unassign', methods: ['POST'])]
+    public function unassignClassRoomFromSubject(string $subjectId, UnassignClassRoomFromSubjectRequestV1 $request): Response
+    {
+        $request->subjectId = $subjectId;
+
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (AssignationNotFound $exception) {
+            throw new ValidationError([
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse([
+            'status' => 'ok',
+        ], Response::HTTP_OK);
+    }
+
     #[Get(
         summary: 'Get list of all subjects with class rooms and teacher info',
         tags: ['Subject', 'v1'],
@@ -182,6 +219,7 @@ final class SubjectController extends AbstractController
             ),
         ],
     )]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/subject/{subjectId}/edit', name: 'v1.subject.edit', methods: ['PATCH'])]
     public function editSubject(string $subjectId, EditSubjectRequestV1 $request): Response
     {

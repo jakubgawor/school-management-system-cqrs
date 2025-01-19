@@ -14,9 +14,9 @@ class SubjectClassRoomRepository
     ) {
     }
 
-    public function isSubjectAlreadyAssigned(string $subjectId, string $classRoomId): bool
+    public function getSubjectAssignation(string $subjectId, string $classRoomId): ?SubjectClassRoom
     {
-        return (bool) $this->entityManager
+        return $this->entityManager
             ->createQueryBuilder()
             ->select('scr')
             ->from(SubjectClassRoom::class, 'scr')
@@ -25,11 +25,16 @@ class SubjectClassRoomRepository
             ->setParameter('subjectId', $subjectId)
             ->setParameter('classRoomId', $classRoomId)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
     public function save(SubjectClassRoom $subjectClassRoom): void
     {
         $this->entityManager->persist($subjectClassRoom);
+    }
+
+    public function remove(SubjectClassRoom $assignation): void
+    {
+        $this->entityManager->remove($assignation);
     }
 }

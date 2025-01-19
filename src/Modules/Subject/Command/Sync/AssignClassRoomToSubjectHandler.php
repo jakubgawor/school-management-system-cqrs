@@ -33,7 +33,7 @@ final class AssignClassRoomToSubjectHandler implements CommandHandler
             throw new ClassRoomDoesNotExist();
         }
 
-        if ($this->subjectClassRoomRepository->isSubjectAlreadyAssigned($command->subjectId, $command->classRoomId)) {
+        if ($this->subjectClassRoomRepository->getSubjectAssignation($command->subjectId, $command->classRoomId)) {
             throw new SubjectAlreadyAssignedToClassRoom();
         }
 
