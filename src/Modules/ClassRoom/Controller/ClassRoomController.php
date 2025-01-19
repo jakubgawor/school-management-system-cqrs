@@ -7,6 +7,7 @@ namespace App\Modules\ClassRoom\Controller;
 use App\Modules\ClassRoom\Exception\ClassRoomAlreadyExists;
 use App\Modules\ClassRoom\Exception\ClassRoomDoesNotExist;
 use App\Modules\ClassRoom\Query\ClassRoomListQuery;
+use App\Modules\ClassRoom\Query\StudentsListAssignedToClassRoom;
 use App\Modules\ClassRoom\Request\V1\AddStudentToClassRoom as AddStudentToClassRoomRequestV1;
 use App\Modules\ClassRoom\Request\V1\CreateClassRoom as CreateClassRoomRequestV1;
 use App\Modules\ClassRoom\Request\V1\EditClassRoom as EditClassRoomRequestV1;
@@ -251,5 +252,42 @@ final class ClassRoomController extends AbstractController
         return new JsonResponse([
             'status' => 'ok',
         ], Response::HTTP_OK);
+    }
+
+    #[Get(
+        summary: 'Get list of students assigned to class room',
+        tags: ['ClassRoom', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'id',
+                description: 'Class room id',
+                in: 'path',
+                required: true,
+                schema: new Schema(type: 'string'),
+            )
+        ],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Get list of students assigned to class room',
+                content: new JsonContent(
+                    type: 'array',
+                    items: new Items(
+                        properties: [
+                            new Property(property: 'studentId', description: 'Student id'),
+                            new Property(property: 'firstName', description: 'Student first name'),
+                            new Property(property: 'lastName', description: 'Student last name'),
+                            new Property(property: 'email', description: 'Student email'),
+                        ],
+                    ),
+                ),
+            ),
+        ],
+    )]
+    #[Isgranted('ROLE_STUDENT')]
+    #[Route('/api/v1/class_room/{id}/students', name: 'v1.class_room.students', methods: ['GET'])]
+    public function studentsListAssignedToClassRoom(string $id, StudentsListAssignedToClassRoom $query): Response
+    {
+        return new JsonResponse($query->execute($id));
     }
 }

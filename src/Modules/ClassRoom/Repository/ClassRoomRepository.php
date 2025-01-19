@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Modules\ClassRoom\Repository;
 
 use App\Modules\ClassRoom\Entity\ClassRoom;
+use App\Modules\Student\Entity\Student;
+use App\Modules\User\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 
 class ClassRoomRepository
 {
@@ -81,5 +84,19 @@ class ClassRoomRepository
     public function remove(ClassRoom $classRoom): void
     {
         $this->entityManager->remove($classRoom);
+    }
+
+    public function getStudentsInfoAssignedToClassRoom(string $classRoomId): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('s.id, u.firstName, u.lastName, u.email')
+            ->from(ClassRoom::class, 'c')
+            ->join(Student::class, 's', 's.classRoomId = c.id')
+            ->join(User::class, 'u', Join::WITH, 's.userId = u.id')
+            ->where('c.id = :classRoomId')
+            ->setParameter('classRoomId', $classRoomId)
+            ->getQuery()
+            ->getResult();
     }
 }
