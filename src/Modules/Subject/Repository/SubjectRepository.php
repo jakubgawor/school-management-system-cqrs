@@ -63,4 +63,9 @@ final class SubjectRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function remove(Subject $subject): void
+    {
+        $this->entityManager->remove($subject);
+    }
 }

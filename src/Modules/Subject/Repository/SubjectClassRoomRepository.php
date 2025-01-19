@@ -28,6 +28,18 @@ class SubjectClassRoomRepository
             ->getOneOrNullResult();
     }
 
+    public function getClassRoomsAssignedToSubject(string $subjectId): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('scr')
+            ->from(SubjectClassRoom::class, 'scr')
+            ->where('scr.subjectId = :subjectId')
+            ->setParameter('subjectId', $subjectId)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function save(SubjectClassRoom $subjectClassRoom): void
     {
         $this->entityManager->persist($subjectClassRoom);

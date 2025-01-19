@@ -12,11 +12,13 @@ use App\Modules\Subject\Query\AllSubjectsListQuery;
 use App\Modules\Subject\Request\V1\AssignClassRoomToSubject as AssignClassRoomToSubjectRequestV1;
 use App\Modules\Subject\Request\V1\CreateSubject as CreateSubjectRequestV1;
 use App\Modules\Subject\Request\V1\EditSubject as EditSubjectRequestV1;
+use App\Modules\Subject\Request\V1\RemoveSubject as RemoveSubjectRequestV1;
 use App\Modules\Subject\Request\V1\UnassignClassRoomFromSubject as UnassignClassRoomFromSubjectRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
 use OpenApi\Attributes\AdditionalProperties;
+use OpenApi\Attributes\Delete;
 use OpenApi\Attributes\Get;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\JsonContent;
@@ -222,6 +224,37 @@ final class SubjectController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/subject/{subjectId}/edit', name: 'v1.subject.edit', methods: ['PATCH'])]
     public function editSubject(string $subjectId, EditSubjectRequestV1 $request): Response
+    {
+        $request->subjectId = $subjectId;
+
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (SubjectDoesNotExist $exception) {
+            throw new ValidationError([
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    #[Delete(
+        summary: 'Remove subject',
+        tags: ['Subject', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'id',
+                description: 'Subject id',
+                in: 'path',
+                required: true,
+                schema: new Schema(type: 'string', format: 'uuid'),
+            ),
+        ],
+    )]
+    #[Route('/api/v1/subject/{subjectId}/remove', name: 'v1.subject.remove', methods: ['DELETE'])]
+    public function removeSubject(string $subjectId, RemoveSubjectRequestV1 $request): Response
     {
         $request->subjectId = $subjectId;
 
