@@ -264,7 +264,7 @@ final class ClassRoomController extends AbstractController
                 in: 'path',
                 required: true,
                 schema: new Schema(type: 'string'),
-            )
+            ),
         ],
         responses: [
             new OAResponse(
