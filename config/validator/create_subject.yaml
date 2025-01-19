@@ -14,7 +14,7 @@ App\Modules\Subject\Request\V1\CreateSubject:
           message: 'VALIDATION.INVALID_FORMAT'
       - Length:
           min: 3
-          max: 64
+          max: 255
           minMessage: 'VALIDATION.TOO_SHORT'
           maxMessage: 'VALIDATION.TOO_LONG'
     description:
@@ -22,5 +22,5 @@ App\Modules\Subject\Request\V1\CreateSubject:
           type: string
           message: 'VALIDATION.INVALID_FORMAT'
       - Length:
-          max: 64
+          max: 4096
           maxMessage: 'VALIDATION.TOO_LONG'
