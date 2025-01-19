@@ -18,10 +18,13 @@ use OpenApi\Attributes\AdditionalProperties;
 use OpenApi\Attributes\Get;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\JsonContent;
+use OpenApi\Attributes\Parameter;
+use OpenApi\Attributes\Patch;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
 use OpenApi\Attributes\Response as OAResponse;
+use OpenApi\Attributes\Schema;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -154,6 +157,31 @@ final class SubjectController extends AbstractController
         return new JsonResponse($query->execute());
     }
 
+    #[Patch(
+        summary: 'Edit subject',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['teacherId', 'name'],
+                properties: [
+                    new Property(property: 'teacherId', type: 'string', format: 'uuid'),
+                    new Property(property: 'name', type: 'string'),
+                    new Property(property: 'description', type: 'string'),
+                ],
+                type: 'object',
+            ),
+        ),
+        tags: ['Subject', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'id',
+                description: 'Subject id',
+                in: 'path',
+                required: true,
+                schema: new Schema(type: 'string'),
+            ),
+        ],
+    )]
     #[Route('/api/v1/subject/{subjectId}/edit', name: 'v1.subject.edit', methods: ['PATCH'])]
     public function editSubject(string $subjectId, EditSubjectRequestV1 $request): Response
     {
