@@ -16,6 +16,12 @@ student:
         namespace: App\Modules\Student\Controller
     type: attribute
 
+teacher:
+    resource:
+        path: ../src/Modules/Teacher/Controller/
+        namespace: App\Modules\Teacher\Controller
+    type: attribute
+
 subject:
     resource:
         path: ../src/Modules/Subject/Controller/

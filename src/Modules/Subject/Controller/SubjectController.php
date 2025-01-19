@@ -253,6 +253,7 @@ final class SubjectController extends AbstractController
             ),
         ],
     )]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/subject/{subjectId}/remove', name: 'v1.subject.remove', methods: ['DELETE'])]
     public function removeSubject(string $subjectId, RemoveSubjectRequestV1 $request): Response
     {
