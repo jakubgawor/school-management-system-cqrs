@@ -28,7 +28,7 @@ final class ClassRoomListQuery
             $limit = 50;
         }
 
-        $classRooms = $this->classRoomRepository->findPaginatedClassRooms($page, $limit);
+        $classRooms = $this->classRoomRepository->findPaginatedClassRooms($page, $limit, $request->get('subjectId'));
         $totalCount = $this->classRoomRepository->countClassRooms();
 
         $data = [];

@@ -83,14 +83,21 @@ final class ClassRoomController extends AbstractController
                 description: 'Page number',
                 in: 'query',
                 required: false,
-                schema: new Schema(type: 'integer', example: 2)
+                schema: new Schema(type: 'integer', example: 2),
             ),
             new Parameter(
                 name: 'limit',
                 description: 'Limit number of results',
                 in: 'query',
                 required: false,
-                schema: new Schema(type: 'integer', example: 20)
+                schema: new Schema(type: 'integer', example: 20),
+            ),
+            new Parameter(
+                name: 'subjectId',
+                description: 'Exclusion of class rooms assigned to the subject with this subject id',
+                in: 'query',
+                required: false,
+                schema: new Schema(type: 'string', format: 'uuid'),
             ),
         ],
         responses: [
@@ -133,8 +140,8 @@ final class ClassRoomController extends AbstractController
             ),
         ],
     )]
-    #[IsGranted('ROLE_TEACHER')]
-    #[Route('/api/v1/class_room/list', name: 'v1.class_room.list', methods: ['GET'])]
+//    #[IsGranted('ROLE_TEACHER')]
+    #[Route('/api/v1/class_rooms/list', name: 'v1.class_rooms.list', methods: ['GET'])]
     public function classRoomList(ClassRoomListQuery $classRoomListQuery): Response
     {
         return new JsonResponse($classRoomListQuery->execute());

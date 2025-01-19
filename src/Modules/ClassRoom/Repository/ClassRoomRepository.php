@@ -6,6 +6,7 @@ namespace App\Modules\ClassRoom\Repository;
 
 use App\Modules\ClassRoom\Entity\ClassRoom;
 use App\Modules\Student\Entity\Student;
+use App\Modules\Subject\Entity\SubjectClassRoom;
 use App\Modules\User\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
@@ -46,12 +47,14 @@ class ClassRoomRepository
             ->getOneOrNullResult();
     }
 
-    public function findPaginatedClassRooms(int $page, int $limit): array
+    public function findPaginatedClassRooms(int $page, int $limit, ?string $subjectId = null): array
     {
         return $this->entityManager
             ->createQueryBuilder()
             ->select('c')
             ->from(ClassRoom::class, 'c')
+            ->where('c.id not in (select scr.classRoomId from ' . SubjectClassRoom::class . ' scr where scr.subjectId = :subjectId)')
+            ->setParameter('subjectId', $subjectId)
             ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit)
             ->orderBy('c.name', 'ASC')
