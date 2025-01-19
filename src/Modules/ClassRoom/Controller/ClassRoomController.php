@@ -140,7 +140,7 @@ final class ClassRoomController extends AbstractController
             ),
         ],
     )]
-//    #[IsGranted('ROLE_TEACHER')]
+    #[IsGranted('ROLE_TEACHER')]
     #[Route('/api/v1/class_rooms/list', name: 'v1.class_rooms.list', methods: ['GET'])]
     public function classRoomList(ClassRoomListQuery $classRoomListQuery): Response
     {
