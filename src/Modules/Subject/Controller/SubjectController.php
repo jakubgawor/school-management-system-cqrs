@@ -10,6 +10,7 @@ use App\Modules\Subject\Exception\TeacherDoesNotExist;
 use App\Modules\Subject\Query\AllSubjectsListQuery;
 use App\Modules\Subject\Request\V1\AssignClassRoomToSubject as AssignClassRoomToSubjectRequestV1;
 use App\Modules\Subject\Request\V1\CreateSubject as CreateSubjectRequestV1;
+use App\Modules\Subject\Request\V1\EditSubject as EditSubjectRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
@@ -151,5 +152,23 @@ final class SubjectController extends AbstractController
     public function allSubjectsList(AllSubjectsListQuery $query): Response
     {
         return new JsonResponse($query->execute());
+    }
+
+    #[Route('/api/v1/subject/{subjectId}/edit', name: 'v1.subject.edit', methods: ['PATCH'])]
+    public function editSubject(string $subjectId, EditSubjectRequestV1 $request): Response
+    {
+        $request->subjectId = $subjectId;
+
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (SubjectDoesNotExist $exception) {
+            throw new ValidationError([
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 }

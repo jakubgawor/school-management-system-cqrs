@@ -1,0 +1,30 @@
+App\Modules\Subject\Request\V1\EditSubject:
+  properties:
+    subjectId:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Regex:
+          pattern: '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i'
+          message: 'VALIDATION.INVALID_FORMAT'
+    teacherId:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Regex:
+          pattern: '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i'
+          message: 'VALIDATION.INVALID_FORMAT'
+    name:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Length:
+          max: 255
+          maxMessage: 'VALIDATION.TOO_LONG'
+    description:
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Length:
+          max: 4096
+          maxMessage: 'VALIDATION.TOO_LONG'
