@@ -20,6 +20,7 @@ final class StudentsListQuery
     {
         $request = $this->requestStack->getCurrentRequest();
 
+        $fetchAll = (bool) $request->get('fetchAll', true);
         $search = $request->get('searchPhrase');
         $page = max(1, $request->query->getInt('page', 1));
         $limit = max(1, $request->query->getInt('limit', 10));
@@ -27,7 +28,7 @@ final class StudentsListQuery
             $limit = 50;
         }
 
-        $students = $this->studentRepository->findPaginatedStudents($page, $limit, $search);
+        $students = $this->studentRepository->findPaginatedStudents($page, $limit, $search, $fetchAll);
 
         $count = $this->studentRepository->getCountOfPaginatedStudents($search);
 

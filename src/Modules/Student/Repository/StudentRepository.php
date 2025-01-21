@@ -7,6 +7,7 @@ namespace App\Modules\Student\Repository;
 use App\Modules\Student\Entity\Student;
 use App\Modules\User\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 
 final class StudentRepository
 {
@@ -62,21 +63,28 @@ final class StudentRepository
             ->getResult();
     }
 
-    public function findPaginatedStudents(int $page, int $limit, ?string $searchPhrase = null): array
+    public function findPaginatedStudents(int $page, int $limit, ?string $searchPhrase = null, bool $fetchAll = true): array
     {
-        return $this->entityManager
-            ->createQueryBuilder()
-            ->select('s.id', 's.userId', 'u.firstName', 'u.lastName', 'u.email')
+        $qb = $this->entityManager->createQueryBuilder();
+
+        $qb->select('s.id', 's.userId', 'u.firstName', 'u.lastName', 'u.email')
             ->from(Student::class, 's')
-            ->join(User::class, 'u', 'u.id = s.userId')
+            ->innerJoin(User::class, 'u', Join::WITH, 'u.id = s.userId')
             ->where('u.email like :searchPhrase')
             ->orWhere('concat(u.firstName, concat(\' \', u.lastName)) like :searchPhrase')
             ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
             ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit)
-            ->orderBy('u.lastName', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->orderBy('u.lastName', 'ASC');
+
+        if ($fetchAll === false) {
+            $qb->andWhere('s.classRoomId IS NULL');
+        }
+
+        $qb->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
     }
 
     public function getCountOfPaginatedStudents(?string $searchPhrase = null): int

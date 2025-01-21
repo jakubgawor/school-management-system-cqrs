@@ -82,6 +82,13 @@ final class StudentController extends AbstractController
                 required: false,
                 schema: new Schema(type: 'string'),
             ),
+            new Parameter(
+                name: 'fetchAll',
+                description: 'Fetch all students or fetch students without class',
+                in: 'query',
+                required: false,
+                schema: new Schema(type: 'bool'),
+            ),
         ],
         responses: [
             new OAResponse(
