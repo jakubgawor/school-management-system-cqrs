@@ -13,6 +13,7 @@ final readonly class UserBasicInfo
         public string $email,
         public array $roles,
         public bool $isActivated,
+        public bool $isVerified,
     ) {
     }
 }

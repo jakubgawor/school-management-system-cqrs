@@ -25,6 +25,7 @@ final class GetUserBasicInfoQuery
             $user->getEmail(),
             $user->getRoles(),
             $user->isActivated(),
+            $user->isVerified(),
         );
     }
 }
