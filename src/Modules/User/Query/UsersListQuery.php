@@ -7,6 +7,7 @@ namespace App\Modules\User\Query;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Query\DTO\UserInfo as UserInfoDTO;
 use App\Modules\User\Repository\UserRepository;
+use App\Shared\Util\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final class UsersListQuery
@@ -39,7 +40,7 @@ final class UsersListQuery
                 $user->getFirstName(),
                 $user->getLastName(),
                 $user->getEmail(),
-                $user->getCreatedAt(),
+                DateTimeFormatter::format($user->getCreatedAt()),
                 $user->isVerified(),
                 $user->isActivated(),
                 $user->getRoles()[0]

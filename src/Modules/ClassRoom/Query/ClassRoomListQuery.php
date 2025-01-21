@@ -7,6 +7,7 @@ namespace App\Modules\ClassRoom\Query;
 use App\Modules\ClassRoom\Entity\ClassRoom;
 use App\Modules\ClassRoom\Query\DTO\ClassRoomList as ClassRoomListDTO;
 use App\Modules\ClassRoom\Repository\ClassRoomRepository;
+use App\Shared\Util\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final class ClassRoomListQuery
@@ -37,8 +38,8 @@ final class ClassRoomListQuery
             $data[] = new ClassRoomListDTO(
                 $classRoom->getId(),
                 $classRoom->getName(),
-                $classRoom->getCreatedAt(),
-                $classRoom->getUpdatedAt(),
+                DateTimeFormatter::format($classRoom->getCreatedAt()),
+                DateTimeFormatter::format($classRoom->getUpdatedAt()),
             );
         }
 

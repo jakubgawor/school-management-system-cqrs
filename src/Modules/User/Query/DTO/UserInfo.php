@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Query\DTO;
 
-use DateTimeImmutable;
-
 final readonly class UserInfo
 {
     public function __construct(
@@ -13,7 +11,7 @@ final readonly class UserInfo
         public string $firstName,
         public string $lastName,
         public string $email,
-        public DateTimeImmutable $createdAt,
+        public string $createdAt,
         public bool $isVerified,
         public bool $isActivated,
         public string $role,
