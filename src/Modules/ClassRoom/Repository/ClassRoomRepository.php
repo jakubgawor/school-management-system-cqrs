@@ -95,7 +95,7 @@ class ClassRoomRepository
             ->createQueryBuilder()
             ->select('s.id, u.firstName, u.lastName, u.email')
             ->from(ClassRoom::class, 'c')
-            ->join(Student::class, 's', 's.classRoomId = c.id')
+            ->join(Student::class, 's', Join::WITH, 's.classRoomId = c.id')
             ->join(User::class, 'u', Join::WITH, 's.userId = u.id')
             ->where('c.id = :classRoomId')
             ->setParameter('classRoomId', $classRoomId)
