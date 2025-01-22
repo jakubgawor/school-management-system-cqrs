@@ -13,6 +13,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class ExceptionListener
 {
+    public const string GENERAL = 'general';
+
     public function __construct(
         private string $environment,
     ) {
@@ -37,7 +39,12 @@ final class ExceptionListener
                 $content['errors'] = [
                     'server' => $exception::class . ' - ' . $event->getThrowable()->getMessage(),
                 ];
+            } else {
+                $content['errors'] = [
+                    self::GENERAL => 'INTERNAL_SERVER_ERROR'
+                ];
             }
+
         }
 
         $event->setResponse(new JsonResponse($content ?? null, $code));

@@ -60,6 +60,8 @@ final class SubjectRepository
             ->leftJoin(ClassRoom::class, 'c', Join::WITH, 'scr.classRoomId = c.id')
             ->leftJoin(Teacher::class, 't', Join::WITH, 's.teacherId = t.id')
             ->leftJoin(User::class, 'u', Join::WITH, 't.userId = u.id')
+            ->orderBy('subjectName')
+            ->addOrderBy('classRoomName')
             ->getQuery()
             ->getArrayResult();
     }
