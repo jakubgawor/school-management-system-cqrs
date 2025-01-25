@@ -93,7 +93,7 @@ final class StudentRepository
             ->createQueryBuilder()
             ->select('count(s.id)')
             ->from(Student::class, 's')
-            ->join(User::class, 'u', 'u.id = s.userId')
+            ->join(User::class, 'u', Join::WITH, 'u.id = s.userId')
             ->where('u.email like :searchPhrase')
             ->orWhere('concat(u.firstName, concat(\' \', u.lastName)) like :searchPhrase')
             ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
