@@ -1,0 +1,33 @@
+App\Modules\Grade\Request\V1\AddGrade:
+  properties:
+    studentId:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Regex:
+          pattern: '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i'
+          message: 'VALIDATION.INVALID_FORMAT'
+    subjectId:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Regex:
+          pattern: '/^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i'
+          message: 'VALIDATION.INVALID_FORMAT'
+    grade:
+      - Choice:
+          callback: [App\Modules\Grade\Enum\GradeValue, list]
+          message: 'VALIDATION.WRONG_GRADE_VALUE_PROVIDED'
+    weight:
+      - Range:
+          min: 1
+          max: 8
+          notInRangeMessage: 'VALIDATION.WEIGHT_NOT_IN_RANGE'
+      - Type:
+          type: integer
+          message: 'VALIDATION.INVALID_FORMAT'
+    description:
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Length:
+          max: 4096
+          maxMessage: 'VALIDATION.TOO_LONG'
