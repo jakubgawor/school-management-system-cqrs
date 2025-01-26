@@ -27,3 +27,9 @@ subject:
         path: ../src/Modules/Subject/Controller/
         namespace: App\Modules\Subject\Controller
     type: attribute
+
+grade:
+    resource:
+        path: ../src/Modules/Grade/Controller/
+        namespace: App\Modules\Grade\Controller
+    type: attribute
