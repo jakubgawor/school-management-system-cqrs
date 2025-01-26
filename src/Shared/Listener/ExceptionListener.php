@@ -41,7 +41,7 @@ final class ExceptionListener
                 ];
             } else {
                 $content['errors'] = [
-                    self::GENERAL => 'INTERNAL_SERVER_ERROR'
+                    self::GENERAL => 'INTERNAL_SERVER_ERROR',
                 ];
             }
 
