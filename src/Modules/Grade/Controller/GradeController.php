@@ -15,6 +15,7 @@ use App\Shared\Request\Validator\ValidationError;
 use OpenApi\Attributes\Delete;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Parameter;
+use OpenApi\Attributes\Patch;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
@@ -94,6 +95,31 @@ final class GradeController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    #[Patch(
+        summary: 'Edit grade',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['grade', 'weight', 'description'],
+                properties: [
+                    new Property(property: 'grade', description: 'Grade value', type: 'string'),
+                    new Property(property: 'weight', description: 'Grade weight', type: 'integer'),
+                    new Property(property: 'description', description: 'Grade description', type: 'string'),
+                ],
+                type: 'object',
+            ),
+        ),
+        tags: ['Grade', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'gradeId',
+                description: 'Grade ID',
+                in: 'path',
+                required: true,
+            ),
+        ],
+    )]
+    #[IsGranted('ROLE_TEACHER')]
     #[Route('/api/v1/grade/{gradeId}/edit', name: 'v1.grade.edit', methods: ['PATCH'])]
     public function editGrade(string $gradeId, EditGradeRequestV1 $request): Response
     {
