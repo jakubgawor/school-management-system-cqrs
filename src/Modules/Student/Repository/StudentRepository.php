@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Student\Repository;
 
 use App\Modules\Student\Entity\Student;
+use App\Modules\Subject\Entity\Subject;
+use App\Modules\Subject\Entity\SubjectClassRoom;
+use App\Modules\Teacher\Entity\Teacher;
 use App\Modules\User\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
@@ -99,5 +102,60 @@ final class StudentRepository
             ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getStudentDetailsWithSubjectsAndTeacher(string $studentId): array
+    {
+        $rows = $this->entityManager
+            ->createQueryBuilder()
+            ->select(
+                'u.firstName as userFirstName',
+                'u.lastName as userLastName',
+                'u.email as userEmail',
+                's.classRoomId as classRoomId',
+                'sub.id as subjectId',
+                'sub.name as subjectName',
+                'teacherUser.firstName as teacherFirstName',
+                'teacherUser.lastName as teacherLastName',
+                'teacherUser.email as teacherEmail',
+            )
+            ->from(Student::class, 's')
+            ->join(User::class, 'u', Join::WITH, 'u.id = s.userId')
+            ->join(SubjectClassRoom::class, 'sc', Join::WITH, 'sc.classRoomId = s.classRoomId')
+            ->join(Subject::class, 'sub', Join::WITH, 'sub.id = sc.subjectId')
+            ->join(Teacher::class, 't', Join::WITH, 't.id = sub.teacherId')
+            ->join(User::class, 'teacherUser', Join::WITH, 'teacherUser.id = t.userId')
+            ->where('s.id = :studentId')
+            ->setParameter('studentId', $studentId)
+            ->getQuery()
+            ->getArrayResult();
+
+        $studentFirstName = $rows[0]['userFirstName'];
+        $studentLastName = $rows[0]['userLastName'];
+        $studentClassRoomId = $rows[0]['classRoomId'];
+
+        $subjectsById = [];
+        foreach ($rows as $row) {
+            $subjectId = $row['subjectId'];
+
+            if (! isset($subjectsById[$subjectId])) {
+                $subjectsById[$subjectId] = [
+                    'id' => $subjectId,
+                    'name' => $row['subjectName'],
+                    'teacherFirstName' => $row['teacherFirstName'],
+                    'teacherLastName' => $row['teacherLastName'],
+                    'teacherEmail' => $row['teacherEmail'],
+                ];
+            }
+        }
+
+        $subjects = array_values($subjectsById);
+
+        return [
+            'studentFirstName' => $studentFirstName,
+            'studentLastName' => $studentLastName,
+            'studentClassRoomId' => $studentClassRoomId,
+            'subjects' => $subjects,
+        ];
     }
 }

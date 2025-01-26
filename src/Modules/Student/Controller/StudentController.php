@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Student\Controller;
 
+use App\Modules\Student\Query\StudentDetailsQuery;
 use App\Modules\Student\Query\StudentsListQuery;
 use App\Modules\Student\Request\V1\RemoveStudentClassRoom as RemoveStudentClassRoomRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
@@ -123,5 +124,51 @@ final class StudentController extends AbstractController
     public function studentsList(StudentsListQuery $query): Response
     {
         return new JsonResponse($query->execute());
+    }
+
+    #[Get(
+        summary: 'Get student details with subject info',
+        tags: ['Student', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'studentId',
+                description: 'Student id',
+                in: 'path',
+                required: false,
+                schema: new Schema(type: 'string', format: 'uuid'),
+            ),
+        ],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Returns student details with subject info',
+                content: new JsonContent(
+                    properties: [
+                        new Property(property: 'studentFirstName', type: 'string'),
+                        new Property(property: 'studentLastName', type: 'string'),
+                        new Property(property: 'studentClassRoomId', type: 'string', format: 'uuid'),
+                        new Property(
+                            property: 'subjects',
+                            type: 'array',
+                            items: new Items(
+                                properties: [
+                                    new Property(property: 'id', type: 'string', format: 'uuid'),
+                                    new Property(property: 'name', type: 'string'),
+                                    new Property(property: 'teacherFirstName', type: 'string'),
+                                    new Property(property: 'teacherLastName', type: 'string'),
+                                    new Property(property: 'teacherEmail', type: 'string'),
+                                ]
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+        ]
+    )]
+    #[IsGranted('ROLE_TEACHER')]
+    #[Route('/api/v1/student/{studentId}/details', name: 'v1.student.details', methods: ['GET'])]
+    public function getStudentDetails(string $studentId, StudentDetailsQuery $query): Response
+    {
+        return new JsonResponse($query->execute($studentId));
     }
 }
