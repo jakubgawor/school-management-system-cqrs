@@ -18,4 +18,14 @@ final class GradeRepository
     {
         $this->entityManager->persist($grade);
     }
+
+    public function remove(Grade $grade): void
+    {
+        $this->entityManager->remove($grade);
+    }
+
+    public function findGradeById(string $gradeId): ?Grade
+    {
+        return $this->entityManager->find(Grade::class, $gradeId);
+    }
 }

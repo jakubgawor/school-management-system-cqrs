@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace App\Modules\Grade\Controller;
 
+use App\Modules\Grade\Command\ASync\RemoveGrade;
 use App\Modules\Grade\Request\V1\AddGrade as AddGradeRequestV1;
+use App\Modules\Grade\Request\V1\EditGrade as EditGradeRequestV1;
+use App\Shared\Command\Async\CommandBus as AsyncCommandBus;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
 use App\Shared\Exception\BaseException;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
+use OpenApi\Attributes\Delete;
 use OpenApi\Attributes\JsonContent;
+use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
+use OpenApi\Attributes\Schema;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +30,8 @@ final class GradeController extends AbstractController
     public function __construct(
         private RequestValidator $validator,
         private SyncCommandBus $syncCommandBus,
+        private AsyncCommandBus $asyncCommandBus,
+        private readonly RequestValidator $requestValidator,
     ) {
     }
 
@@ -62,5 +70,38 @@ final class GradeController extends AbstractController
         return new JsonResponse([
             'status' => 'ok',
         ], Response::HTTP_CREATED);
+    }
+
+    #[Delete(
+        summary: 'Remove grade',
+        tags: ['Grade', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'Grade id',
+                description: 'Grade id',
+                in: 'path',
+                required: true,
+                schema: new Schema(type: 'string', format: 'uuid')
+            ),
+        ],
+    )]
+    #[IsGranted('ROLE_TEACHER')]
+    #[Route('/api/v1/grade/{gradeId}/remove', name: 'v1.grade.remove', methods: ['DELETE'])]
+    public function deleteGrade(string $gradeId): Response
+    {
+        $this->asyncCommandBus->dispatch(new RemoveGrade($gradeId));
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/api/v1/grade/{gradeId}/edit', name: 'v1.grade.edit', methods: ['PATCH'])]
+    public function editGrade(string $gradeId, EditGradeRequestV1 $request): Response
+    {
+        $request->gradeId = $gradeId;
+        $this->requestValidator->validate($request);
+
+        $this->asyncCommandBus->dispatch($request->toCommand());
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 }

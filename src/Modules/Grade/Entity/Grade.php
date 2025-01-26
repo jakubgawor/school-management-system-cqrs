@@ -88,14 +88,35 @@ class Grade
         return $this->grade;
     }
 
+    public function setGrade(GradeValue $grade): self
+    {
+        $this->grade = $grade;
+
+        return $this;
+    }
+
     public function getWeight(): int
     {
         return $this->weight;
     }
 
+    public function setWeight(int $weight): self
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 
     public function getCreatedAt(): DateTimeImmutable
