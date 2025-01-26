@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Grade\Controller;
 
 use App\Modules\Grade\Command\ASync\RemoveGrade;
+use App\Modules\Grade\Query\GetGradeDetails;
 use App\Modules\Grade\Request\V1\AddGrade as AddGradeRequestV1;
 use App\Modules\Grade\Request\V1\EditGrade as EditGradeRequestV1;
 use App\Shared\Command\Async\CommandBus as AsyncCommandBus;
@@ -13,12 +14,14 @@ use App\Shared\Exception\BaseException;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
 use OpenApi\Attributes\Delete;
+use OpenApi\Attributes\Get;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Patch;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
+use OpenApi\Attributes\Response as OAResponse;
 use OpenApi\Attributes\Schema;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -129,5 +132,43 @@ final class GradeController extends AbstractController
         $this->asyncCommandBus->dispatch($request->toCommand());
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    #[Get(
+        summary: 'Get grade details',
+        tags: ['Grade', 'v1'],
+        parameters: [
+            new Parameter(
+                name: 'gradeId',
+                description: 'Grade id',
+                in: 'query',
+                required: false,
+                schema: new Schema(type: 'string', format: 'uuid'),
+            ),
+        ],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Returns grade details',
+                content: new JsonContent(
+                    properties: [
+                        new Property(property: 'id', type: 'string', format: 'uuid'),
+                        new Property(property: 'description', type: 'string'),
+                        new Property(property: 'weight', type: 'integer'),
+                        new Property(property: 'createdAt', type: 'string'),
+                        new Property(property: 'updatedAt', type: 'string'),
+                        new Property(property: 'teacherFirstName', type: 'string'),
+                        new Property(property: 'teacherLastName', type: 'string'),
+                        new Property(property: 'teacherEmail', type: 'string'),
+                    ]
+                ),
+            ),
+        ],
+    )]
+    #[IsGranted('ROLE_TEACHER')]
+    #[Route('/api/v1/grade/{gradeId}/details', name: 'v1.grade.details', methods: ['GET'])]
+    public function getGradeDetails(string $gradeId, GetGradeDetails $query): Response
+    {
+        return new JsonResponse($query->execute($gradeId));
     }
 }
