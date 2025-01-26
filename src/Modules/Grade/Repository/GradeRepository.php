@@ -45,4 +45,18 @@ final class GradeRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    public function findGradesByStudentIdAndSubjectId(string $studentId, string $subjectId): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('g.id, g.grade, g.weight, g.description, g.createdAt, g.updatedAt')
+            ->from(Grade::class, 'g')
+            ->where('g.studentId = :studentId')
+            ->andWhere('g.subjectId = :subjectId')
+            ->setParameter('studentId', $studentId)
+            ->setParameter('subjectId', $subjectId)
+            ->getQuery()
+            ->getResult();
+    }
 }
