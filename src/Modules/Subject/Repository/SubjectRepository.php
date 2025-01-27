@@ -70,4 +70,27 @@ final class SubjectRepository
     {
         $this->entityManager->remove($subject);
     }
+
+    public function getSubjectsWithClassRoomsByTeacherId(string $teacherId): array
+    {
+        $sql = <<<SQL
+        select s.id as subjectId, 
+               s.teacher_id as teacherId,
+               s.name as subjectName, 
+               s.description as subjectDescription, 
+               c.id as classRoomId, 
+               c.name as classRoomName
+        from subject s
+        left join subject_class_room scr on scr.subject_id = s.id
+        left join class_room c on scr.class_room_id = c.id 
+        where s.teacher_id = :teacherId
+        SQL;
+
+        return $this->entityManager
+            ->getConnection()
+            ->executeQuery($sql, [
+                'teacherId' => $teacherId,
+            ])
+            ->fetchAllAssociative();
+    }
 }

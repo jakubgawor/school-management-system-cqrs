@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Teacher\Controller;
 
+use App\Modules\Teacher\Query\MySubjectsTeacherQuery;
 use App\Modules\Teacher\Query\TeachersListQuery;
 use OpenApi\Attributes\Get;
 use OpenApi\Attributes\Items;
@@ -78,6 +79,42 @@ final class TeacherController extends AbstractController
     #[IsGranted('ROLE_TEACHER')]
     #[Route('/api/v1/teachers/list', name: 'v1.teachers.list', methods: ['GET'])]
     public function teachersList(TeachersListQuery $query): Response
+    {
+        return new JsonResponse($query->execute());
+    }
+
+    #[Get(
+        summary: 'Get list of subjects with class rooms for logged teacher',
+        tags: ['Teacher', 'v1'],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Get list of subjects with class rooms for logged teacher',
+                content: new JsonContent(
+                    properties: [
+                        new Property(property: 'subjectId', type: 'string', format: 'uuid'),
+                        new Property(property: 'teacherId', type: 'string', format: 'uuid'),
+                        new Property(property: 'name', type: 'string'),
+                        new Property(property: 'description', type: 'string'),
+                        new Property(
+                            property: 'classRooms',
+                            type: 'array',
+                            items: new Items(
+                                properties: [
+                                    new Property(property: 'teacherId', type: 'string', format: 'uuid'),
+                                    new Property(property: 'name', type: 'string'),
+                                ],
+                                type: 'object'
+                            ),
+                        ),
+                    ]
+                ),
+            ),
+        ],
+    )]
+    #[IsGranted('EXACT_ROLE_TEACHER')]
+    #[Route('/api/v1/teacher/my_subjects', name: 'v1.teachers.my_subjects', methods: ['GET'])]
+    public function mySubjects(MySubjectsTeacherQuery $query): Response
     {
         return new JsonResponse($query->execute());
     }
