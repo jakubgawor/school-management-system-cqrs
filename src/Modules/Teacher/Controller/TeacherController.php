@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Teacher\Controller;
 
+use App\Modules\Teacher\Query\MyClassRoomsTeacherQuery;
 use App\Modules\Teacher\Query\MySubjectsTeacherQuery;
 use App\Modules\Teacher\Query\TeachersListQuery;
 use OpenApi\Attributes\Get;
@@ -115,6 +116,29 @@ final class TeacherController extends AbstractController
     #[IsGranted('EXACT_ROLE_TEACHER')]
     #[Route('/api/v1/teacher/my_subjects', name: 'v1.teachers.my_subjects', methods: ['GET'])]
     public function mySubjects(MySubjectsTeacherQuery $query): Response
+    {
+        return new JsonResponse($query->execute());
+    }
+
+    #[Get(
+        summary: 'Get list of all class rooms you teach',
+        tags: ['Teacher', 'v1'],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Get list of all class rooms you teach',
+                content: new JsonContent(
+                    properties: [
+                        new Property(property: 'id', type: 'string', format: 'uuid'),
+                        new Property(property: 'name', type: 'string'),
+                    ]
+                ),
+            ),
+        ],
+    )]
+    #[IsGranted('EXACT_ROLE_TEACHER')]
+    #[Route('/api/v1/teacher/my_class_rooms', name: 'v1.teachers.my_class_rooms', methods: ['GET'])]
+    public function myClassRooms(MyClassRoomsTeacherQuery $query): Response
     {
         return new JsonResponse($query->execute());
     }

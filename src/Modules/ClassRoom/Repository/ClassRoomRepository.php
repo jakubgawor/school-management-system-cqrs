@@ -6,6 +6,7 @@ namespace App\Modules\ClassRoom\Repository;
 
 use App\Modules\ClassRoom\Entity\ClassRoom;
 use App\Modules\Student\Entity\Student;
+use App\Modules\Subject\Entity\Subject;
 use App\Modules\Subject\Entity\SubjectClassRoom;
 use App\Modules\User\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -99,6 +100,20 @@ class ClassRoomRepository
             ->join(User::class, 'u', Join::WITH, 's.userId = u.id')
             ->where('c.id = :classRoomId')
             ->setParameter('classRoomId', $classRoomId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getClassRoomsByTeacherId(string $teacherId): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('c.id', 'c.name')
+            ->from(ClassRoom::class, 'c')
+            ->join(SubjectClassRoom::class, 'scr', Join::WITH, 'c.id = scr.classRoomId')
+            ->join(Subject::class, 's', Join::WITH, 's.id = scr.subjectId')
+            ->where('s.teacherId = :teacherId')
+            ->setParameter('teacherId', $teacherId)
             ->getQuery()
             ->getResult();
     }
