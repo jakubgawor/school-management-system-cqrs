@@ -8,7 +8,7 @@ use App\Modules\User\Enum\Role;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class ExactRoleTeacherVoter extends Voter
+final class ExactRoleTeacherVoter extends Voter
 {
     public const string EXACT_ROLE_TEACHER = 'EXACT_ROLE_TEACHER';
 
