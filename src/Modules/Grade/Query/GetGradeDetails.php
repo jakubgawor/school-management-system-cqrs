@@ -21,6 +21,7 @@ final class GetGradeDetails
 
         return new GradeDetails(
             $gradeDetails['id'],
+            $gradeDetails['grade']->value,
             $gradeDetails['description'],
             $gradeDetails['weight'],
             DateTimeFormatter::format($gradeDetails['createdAt']),

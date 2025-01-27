@@ -8,6 +8,7 @@ final readonly class GradeDetails
 {
     public function __construct(
         public string $id,
+        public string $grade,
         public string $description,
         public int $weight,
         public string $createdAt,

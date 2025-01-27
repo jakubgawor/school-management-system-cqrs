@@ -36,7 +36,17 @@ final class GradeRepository
     {
         return $this->entityManager
             ->createQueryBuilder()
-            ->select('g.id, g.description, g.weight, g.createdAt, g.updatedAt, u.firstName, u.lastName, u.email')
+            ->select(
+                'g.id',
+                ' g.grade',
+                ' g.description',
+                ' g.weight',
+                'g.createdAt',
+                'g.updatedAt',
+                'u.firstName',
+                'u.lastName',
+                'u.email'
+            )
             ->from(Grade::class, 'g')
             ->join(Teacher::class, 't', Join::WITH, 'g.teacherId = t.id')
             ->join(User::class, 'u', Join::WITH, 't.userId = u.id')
