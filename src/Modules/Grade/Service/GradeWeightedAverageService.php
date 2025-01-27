@@ -11,7 +11,7 @@ final class GradeWeightedAverageService
         $sum = 0;
         $weightSum = 0;
         foreach ($grades as $grade) {
-            $gradeValue = (float) $grade['grade']->value;
+            $gradeValue = (float) $grade['grade'];
 
             $sum += $gradeValue * $grade['weight'];
             $weightSum += $grade['weight'];

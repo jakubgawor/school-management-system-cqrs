@@ -69,4 +69,28 @@ final class GradeRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findGradesForStudentWithSubjectInfo(string $studentId): array
+    {
+        $sql = <<<SQL
+select g.id as gradeId,
+       g.grade as gradeValue,
+       g.weight as gradeWeight,
+       g.description as gradeDescription,
+       g.created_at as gradeCreatedAt,
+       g.updated_at as gradeUpdatedAt,
+       s.id as subjectId,
+       s.name as subjectName
+from grade g
+join subject s on s.id = g.subject_id
+where student_id = '019442e2-4cd0-7f90-a2de-7cdd6b0ae012'
+SQL;
+
+        return $this->entityManager
+            ->getConnection()
+            ->executeQuery($sql, [
+                'studentId' => $studentId,
+            ])
+            ->fetchAllAssociative();
+    }
 }
