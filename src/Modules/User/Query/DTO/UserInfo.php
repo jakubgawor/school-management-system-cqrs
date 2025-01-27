@@ -15,6 +15,8 @@ final readonly class UserInfo
         public bool $isVerified,
         public bool $isActivated,
         public string $role,
+        public ?string $teacherId,
+        public ?string $studentId,
     ) {
     }
 }

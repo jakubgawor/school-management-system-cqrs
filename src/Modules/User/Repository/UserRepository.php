@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Repository;
 
+use App\Modules\Student\Entity\Student;
+use App\Modules\Teacher\Entity\Teacher;
 use App\Modules\User\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -63,8 +65,10 @@ final class UserRepository
     {
         return $this->entityManager
             ->createQueryBuilder()
-            ->select('u')
+            ->select('u, t.id as teacherId, s.id as studentId')
             ->from(User::class, 'u')
+            ->leftJoin(Student::class, 's', 'WITH', 's.userId = u.id')
+            ->leftJoin(Teacher::class, 't', 'WITH', 't.userId = u.id')
             ->where('u.email like :searchPhrase')
             ->orWhere('concat(u.firstName, concat(\' \', u.lastName)) like :searchPhrase')
             ->setParameter('searchPhrase', '%' . $searchPhrase . '%')

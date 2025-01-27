@@ -35,15 +35,19 @@ final class UsersListQuery
         $data = [];
         /** @var User $user */
         foreach ($users as $user) {
+            $userData = $user[0];
+
             $data[] = new UserInfoDTO(
-                $user->getId(),
-                $user->getFirstName(),
-                $user->getLastName(),
-                $user->getEmail(),
-                DateTimeFormatter::format($user->getCreatedAt()),
-                $user->isVerified(),
-                $user->isActivated(),
-                $user->getRoles()[0]
+                $userData->getId(),
+                $userData->getFirstName(),
+                $userData->getLastName(),
+                $userData->getEmail(),
+                DateTimeFormatter::format($userData->getCreatedAt()),
+                $userData->isVerified(),
+                $userData->isActivated(),
+                $userData->getRoles()[0],
+                $user['teacherId'],
+                $user['studentId'],
             );
         }
 
