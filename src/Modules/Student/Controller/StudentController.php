@@ -198,12 +198,21 @@ final class StudentController extends AbstractController
                 description: 'Returns student grades list',
                 content: new JsonContent(
                     properties: [
-                        new Property(property: 'id', type: 'string', format: 'uuid'),
-                        new Property(property: 'grade', type: 'string'),
-                        new Property(property: 'weight', type: 'integer'),
-                        new Property(property: 'description', type: 'string'),
-                        new Property(property: 'createdAt', type: 'string'),
-                        new Property(property: 'updatedAt', type: 'string'),
+                        new Property(property: 'average', type: 'float'),
+                        new Property(
+                            property: 'grades',
+                            type: 'array',
+                            items: new Items(
+                                properties: [
+                                    new Property(property: 'id', type: 'string', format: 'uuid'),
+                                    new Property(property: 'grade', type: 'string'),
+                                    new Property(property: 'weight', type: 'integer'),
+                                    new Property(property: 'description', type: 'string'),
+                                    new Property(property: 'createdAt', type: 'string'),
+                                    new Property(property: 'updatedAt', type: 'string'),
+                                ]
+                            ),
+                        ),
                     ],
                 ),
             ),

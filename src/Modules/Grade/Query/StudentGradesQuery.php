@@ -6,6 +6,7 @@ namespace App\Modules\Grade\Query;
 
 use App\Modules\Grade\Query\DTO\StudentGrades;
 use App\Modules\Grade\Repository\GradeRepository;
+use App\Modules\Grade\Service\GradeWeightedAverageService;
 use App\Shared\Util\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -14,6 +15,7 @@ final class StudentGradesQuery
     public function __construct(
         private GradeRepository $gradeRepository,
         private RequestStack $requestStack,
+        private GradeWeightedAverageService $gradeWeightedAverageService,
     ) {
     }
 
@@ -35,6 +37,9 @@ final class StudentGradesQuery
             );
         }
 
-        return $data;
+        return [
+            'average' => $this->gradeWeightedAverageService->count($grades),
+            'grades' => $data,
+        ];
     }
 }
