@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Grade\Security\Voter;
+namespace App\Modules\Teacher\Security\Voter;
 
 use App\Modules\User\Enum\Role;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-final class GradeAddVoter extends Voter
+class ExactRoleTeacherVoter extends Voter
 {
-    public const string ADD_GRADE = 'ADD_GRADE';
+    public const string EXACT_ROLE_TEACHER = 'EXACT_ROLE_TEACHER';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === self::ADD_GRADE;
+        return $attribute === self::EXACT_ROLE_TEACHER;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool

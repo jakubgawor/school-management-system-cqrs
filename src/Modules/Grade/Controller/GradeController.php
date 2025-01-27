@@ -57,7 +57,7 @@ final class GradeController extends AbstractController
         ),
         tags: ['Grade', 'v1']
     )]
-    #[IsGranted('ADD_GRADE')]
+    #[IsGranted('EXACT_ROLE_TEACHER')]
     #[Route('/api/v1/grade/add', name: 'v1.grade.add', methods: ['POST'])]
     public function addGrade(AddGradeRequestV1 $request): Response
     {
