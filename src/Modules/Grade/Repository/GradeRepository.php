@@ -83,7 +83,7 @@ select g.id as gradeId,
        s.name as subjectName
 from grade g
 join subject s on s.id = g.subject_id
-where student_id = '019442e2-4cd0-7f90-a2de-7cdd6b0ae012'
+where student_id = :studentId
 SQL;
 
         return $this->entityManager
