@@ -74,7 +74,7 @@ final class UserController extends AbstractController
     )]
     #[IsGranted('UNAUTHENTICATED_USER')]
     #[Route('/api/v1/user/register', name: 'v1.user.register', methods: ['POST'])]
-    public function registerV1(UserRegisterRequestV1 $request): Response
+    public function register(UserRegisterRequestV1 $request): Response
     {
         $this->validator->validate($request);
 
