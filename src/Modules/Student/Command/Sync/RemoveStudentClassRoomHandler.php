@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Student\Command;
+namespace App\Modules\Student\Command\Sync;
 
 use App\Modules\Student\Exception\StudentDoesNotExist;
 use App\Modules\Student\Repository\StudentRepository;

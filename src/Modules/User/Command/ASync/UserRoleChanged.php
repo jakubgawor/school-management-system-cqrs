@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\User\Event;
+namespace App\Modules\User\Command\ASync;
 
-final readonly class UserRoleChanged
+use App\Shared\Command\Async\Command;
+
+final readonly class UserRoleChanged implements Command
 {
     public function __construct(
         public string $userId,

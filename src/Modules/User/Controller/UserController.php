@@ -12,6 +12,7 @@ use App\Modules\User\Exception\TokenCooldownViolation;
 use App\Modules\User\Exception\TokenDoesNotExists;
 use App\Modules\User\Exception\TokenExpired;
 use App\Modules\User\Exception\UserAlreadyExists;
+use App\Modules\User\Exception\UserNotActivated;
 use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Query\GetUserBasicInfoQuery;
 use App\Modules\User\Query\UsersListQuery;
@@ -147,7 +148,7 @@ final class UserController extends AbstractController
     )]
     #[IsGranted('IS_NOT_VERIFIED_BY_EMAIL')]
     #[Route('/api/v1/user/verify_email', name: 'v1.user.verify_email', methods: ['POST'])]
-    public function verifyEmailV1(VerifyEmailRequestV1 $request): Response
+    public function verifyEmail(VerifyEmailRequestV1 $request): Response
     {
         $this->validator->validate($request);
 
@@ -190,7 +191,7 @@ final class UserController extends AbstractController
         tags: ['User', 'v1']
     )]
     #[Route('/api/v1/user/resend_verification_code', name: 'v1.user.resend_verification_code', methods: ['POST'])]
-    public function resendVerificationCodeV1(ResendVerificationCodeRequestV1 $request): Response
+    public function resendVerificationCode(ResendVerificationCodeRequestV1 $request): Response
     {
         $this->validator->validate($request);
 
@@ -223,7 +224,7 @@ final class UserController extends AbstractController
     )]
     #[IsGranted('UNAUTHENTICATED_USER')]
     #[Route('/api/v1/user/request_password_change', name: 'v1.user.request_password_change', methods: ['POST'])]
-    public function requestPasswordChangeV1(RequestPasswordChangeRequestV1 $request): Response
+    public function requestPasswordChange(RequestPasswordChangeRequestV1 $request): Response
     {
         $this->validator->validate($request);
 
@@ -259,7 +260,7 @@ final class UserController extends AbstractController
     )]
     #[IsGranted('UNAUTHENTICATED_USER')]
     #[Route('/api/v1/user/change_forgotten_password', name: 'v1.user.change_forgotten_password', methods: ['POST'])]
-    public function changeForgottenPasswordV1(ChangeForgottenPasswordRequestV1 $request): Response
+    public function changeForgottenPassword(ChangeForgottenPasswordRequestV1 $request): Response
     {
         $this->validator->validate($request);
 
@@ -333,7 +334,7 @@ final class UserController extends AbstractController
     #[Security(name: 'Bearer')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/api/v1/user/me', name: 'v1.user.me', methods: ['GET'])]
-    public function meV1(GetUserBasicInfoQuery $getUserBasicInfoQuery): Response
+    public function me(GetUserBasicInfoQuery $getUserBasicInfoQuery): Response
     {
         return new JsonResponse($getUserBasicInfoQuery->execute($this->getUser()->getId()));
     }
@@ -359,7 +360,7 @@ final class UserController extends AbstractController
     #[Security(name: 'Bearer')]
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/api/v1/user/{userId}/change_role', name: 'v1.user.change_role', methods: ['POST'])]
-    public function changeUserRoleV1(string $userId, ChangeUserRoleRequestV1 $request): Response
+    public function changeUserRole(string $userId, ChangeUserRoleRequestV1 $request): Response
     {
         $request->id = $userId;
 
@@ -367,7 +368,7 @@ final class UserController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (UserNotFound|RoleAlreadyAssigned|CannotChangeOwnRole $exception) {
+        } catch (UserNotFound|RoleAlreadyAssigned|CannotChangeOwnRole|UserNotActivated $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);

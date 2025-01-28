@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Student\Command;
+namespace App\Modules\Student\Command\Sync;
 
 use App\Shared\Command\Sync\Command;
 
