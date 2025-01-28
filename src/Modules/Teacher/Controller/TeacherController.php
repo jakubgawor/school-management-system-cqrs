@@ -129,8 +129,10 @@ final class TeacherController extends AbstractController
                 description: 'Get list of all class rooms you teach',
                 content: new JsonContent(
                     properties: [
-                        new Property(property: 'id', type: 'string', format: 'uuid'),
-                        new Property(property: 'name', type: 'string'),
+                        new Property(property: 'classRoomId', type: 'string', format: 'uuid'),
+                        new Property(property: 'classRoomName', type: 'string'),
+                        new Property(property: 'subjectId', type: 'string', format: 'uuid'),
+                        new Property(property: 'subjectName', type: 'string'),
                     ]
                 ),
             ),

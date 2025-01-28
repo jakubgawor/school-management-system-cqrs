@@ -108,7 +108,12 @@ class ClassRoomRepository
     {
         return $this->entityManager
             ->createQueryBuilder()
-            ->select('c.id', 'c.name')
+            ->select(
+                'c.id as classRoomId',
+                'c.name as classRoomName',
+                's.id as subjectId',
+                's.name as subjectName'
+            )
             ->from(ClassRoom::class, 'c')
             ->join(SubjectClassRoom::class, 'scr', Join::WITH, 'c.id = scr.classRoomId')
             ->join(Subject::class, 's', Join::WITH, 's.id = scr.subjectId')
