@@ -158,4 +158,16 @@ final class StudentRepository
             'subjects' => $subjects,
         ];
     }
+
+    public function findByUserIds(array $userIds): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('s')
+            ->from(Student::class, 's')
+            ->where('s.userId IN (:userIds)')
+            ->setParameter('userIds', $userIds)
+            ->getQuery()
+            ->getResult();
+    }
 }

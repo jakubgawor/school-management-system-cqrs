@@ -74,4 +74,16 @@ final class TeacherRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function findByUserIds(array $userIds): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('t')
+            ->from(Teacher::class, 't')
+            ->where('t.userId IN (:userIds)')
+            ->setParameter('userIds', $userIds)
+            ->getQuery()
+            ->getResult();
+    }
 }
