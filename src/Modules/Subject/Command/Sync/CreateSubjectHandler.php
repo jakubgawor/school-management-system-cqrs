@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Subject\Command\Sync;
 
 use App\Modules\Subject\Entity\Subject;
-use App\Modules\Subject\Exception\TeacherAlreadyAssignedSubject;
 use App\Modules\Subject\Exception\TeacherDoesNotExist;
 use App\Modules\Subject\Repository\SubjectRepository;
 use App\Modules\Teacher\Facade\TeacherFacade;
@@ -25,10 +24,6 @@ class CreateSubjectHandler implements CommandHandler
         $teacher = $this->teacherFacade->existsTeacherById($command->teacherId);
         if (! $teacher) {
             throw new TeacherDoesNotExist();
-        }
-
-        if ($this->subjectRepository->countSubjectsByTeacherId($command->teacherId) >= 1) {
-            throw new TeacherAlreadyAssignedSubject();
         }
 
         $subject = new Subject(

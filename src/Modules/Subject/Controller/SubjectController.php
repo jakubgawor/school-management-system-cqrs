@@ -6,7 +6,6 @@ namespace App\Modules\Subject\Controller;
 
 use App\Modules\Subject\Exception\AssignationNotFound;
 use App\Modules\Subject\Exception\SubjectDoesNotExist;
-use App\Modules\Subject\Exception\TeacherAlreadyAssignedSubject;
 use App\Modules\Subject\Exception\TeacherDoesNotExist;
 use App\Modules\Subject\Query\AllSubjectsListQuery;
 use App\Modules\Subject\Request\V1\AssignClassRoomToSubject as AssignClassRoomToSubjectRequestV1;
@@ -67,7 +66,7 @@ final class SubjectController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (TeacherDoesNotExist|TeacherAlreadyAssignedSubject $exception) {
+        } catch (TeacherDoesNotExist $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
