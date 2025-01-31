@@ -36,10 +36,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: App\Modules\ClassRoom\Event\StudentAddedToClassRoom, method: onStudentAddedToClassRoom }
 
-    App\Modules\Student\EventListener\RemovedClassRoomListener:
-        tags:
-            - { name: kernel.event_listener, event: App\Modules\ClassRoom\Event\ClassRoomRemoved, method: onClassRoomRemoved }
-
     _instanceof:
         App\Shared\Command\Sync\CommandHandler:
             tags:

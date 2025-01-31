@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Modules\ClassRoom\Command\Sync;
 
-use App\Modules\ClassRoom\Event\ClassRoomRemoved;
+use App\Modules\ClassRoom\Command\ASync\ClassRoomRemoved;
 use App\Modules\ClassRoom\Exception\ClassRoomDoesNotExist;
 use App\Modules\ClassRoom\Repository\ClassRoomRepository;
+use App\Shared\Command\Async\CommandBus as ASyncCommandBus;
 use App\Shared\Command\Sync\CommandHandler;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class RemoveClassRoomHandler implements CommandHandler
 {
     public function __construct(
         private ClassRoomRepository $classRoomRepository,
-        private EventDispatcherInterface $eventDispatcher,
+        private ASyncCommandBus $asyncCommandBus,
     ) {
     }
 
@@ -28,6 +28,6 @@ final class RemoveClassRoomHandler implements CommandHandler
 
         $this->classRoomRepository->remove($classRoom);
 
-        $this->eventDispatcher->dispatch(new ClassRoomRemoved($command->id));
+        $this->asyncCommandBus->dispatch(new ClassRoomRemoved($command->id));
     }
 }
