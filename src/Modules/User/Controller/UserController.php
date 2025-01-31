@@ -6,6 +6,7 @@ namespace App\Modules\User\Controller;
 
 use App\Modules\User\Exception\CannotChangeOwnActivation;
 use App\Modules\User\Exception\CannotChangeOwnRole;
+use App\Modules\User\Exception\EmailAlreadyUsed;
 use App\Modules\User\Exception\PasswordsDoNotMatch;
 use App\Modules\User\Exception\RoleAlreadyAssigned;
 use App\Modules\User\Exception\TokenCooldownViolation;
@@ -18,6 +19,7 @@ use App\Modules\User\Query\GetUserBasicInfoQuery;
 use App\Modules\User\Query\UsersListQuery;
 use App\Modules\User\Request\V1\ChangeForgottenPassword as ChangeForgottenPasswordRequestV1;
 use App\Modules\User\Request\V1\ChangeUserActivation as ChangeUserActivationRequestV1;
+use App\Modules\User\Request\V1\ChangeUserEmail as ChangeUserEmailRequestV1;
 use App\Modules\User\Request\V1\ChangeUserRole as ChangeUserRoleRequestV1;
 use App\Modules\User\Request\V1\RequestPasswordChange as RequestPasswordChangeRequestV1;
 use App\Modules\User\Request\V1\ResendVerificationCode as ResendVerificationCodeRequestV1;
@@ -481,6 +483,36 @@ final class UserController extends AbstractController
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (UserNotFound|CannotChangeOwnActivation $exception) {
+            throw new ValidationError([
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Patch(
+        summary: 'Change email of currently logged user',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['email'],
+                properties: [
+                    new Property(property: 'isActivated', type: 'string'),
+                ],
+                type: 'object',
+            ),
+        ),
+        tags: ['User', 'v1'],
+    )]
+    #[Route('/api/v1/user/change_email', name: 'v1.user.change_email', methods: ['PATCH'])]
+    public function changeUserEmail(ChangeUserEmailRequestV1 $request): Response
+    {
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (EmailAlreadyUsed $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
