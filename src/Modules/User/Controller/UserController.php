@@ -20,6 +20,7 @@ use App\Modules\User\Query\UsersListQuery;
 use App\Modules\User\Request\V1\ChangeForgottenPassword as ChangeForgottenPasswordRequestV1;
 use App\Modules\User\Request\V1\ChangeUserActivation as ChangeUserActivationRequestV1;
 use App\Modules\User\Request\V1\ChangeUserEmail as ChangeUserEmailRequestV1;
+use App\Modules\User\Request\V1\ChangeUserPassword as ChangeUserPasswordRequestV1;
 use App\Modules\User\Request\V1\ChangeUserRole as ChangeUserRoleRequestV1;
 use App\Modules\User\Request\V1\RequestPasswordChange as RequestPasswordChangeRequestV1;
 use App\Modules\User\Request\V1\ResendVerificationCode as ResendVerificationCodeRequestV1;
@@ -498,7 +499,7 @@ final class UserController extends AbstractController
             content: new JsonContent(
                 required: ['email'],
                 properties: [
-                    new Property(property: 'isActivated', type: 'string'),
+                    new Property(property: 'email', type: 'string'),
                 ],
                 type: 'object',
             ),
@@ -513,6 +514,38 @@ final class UserController extends AbstractController
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
         } catch (EmailAlreadyUsed $exception) {
+            throw new ValidationError([
+                ValidationError::VALIDATION => [$exception->getValidationKey()],
+            ]);
+        }
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Patch(
+        summary: 'Change password of currently logged user',
+        requestBody: new RequestBody(
+            required: true,
+            content: new JsonContent(
+                required: ['currentPassword', 'newPassword', 'newPasswordConfirmation'],
+                properties: [
+                    new Property(property: 'currentPassword', type: 'string'),
+                    new Property(property: 'newPassword', type: 'string'),
+                    new Property(property: 'newPasswordConfirmation', type: 'string'),
+                ],
+                type: 'object',
+            ),
+        ),
+        tags: ['User', 'v1'],
+    )]
+    #[Route('/api/v1/user/change_password', name: 'v1.user.change_password', methods: ['PATCH'])]
+    public function changeUserPassword(ChangeUserPasswordRequestV1 $request): Response
+    {
+        $this->validator->validate($request);
+
+        try {
+            $this->syncCommandBus->dispatch($request->toCommand());
+        } catch (PasswordsDoNotMatch $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);
