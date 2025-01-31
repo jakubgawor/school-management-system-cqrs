@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Grade\Service;
+namespace App\Modules\Student\Service;
 
-use App\Modules\Grade\Repository\GradeRepository;
+use App\Modules\Grade\Facade\GradeFacade;
 use App\Shared\Util\DateTimeFormatter;
 use JetBrains\PhpStorm\ArrayShape;
 
 final class StudentGradesService
 {
     public function __construct(
-        private GradeRepository $gradeRepository,
-        private GradeWeightedAverageService $gradeWeightedAverageService,
+        private GradeFacade $gradeFacade,
     ) {
     }
 
@@ -29,7 +28,7 @@ final class StudentGradesService
     ])]
     public function handleStudentGradesWithSubjectId(string $studentId, string $subjectId): array
     {
-        $grades = $this->gradeRepository->findGradesByStudentIdAndSubjectId($studentId, $subjectId);
+        $grades = $this->gradeFacade->findGradesByStudentIdAndSubjectId($studentId, $subjectId);
 
         $data = [];
         foreach ($grades as $grade) {
@@ -44,7 +43,7 @@ final class StudentGradesService
         }
 
         return [
-            'average' => $this->gradeWeightedAverageService->count($data),
+            'average' => $this->gradeFacade->countGradeAverage($data),
             'grades' => $data,
         ];
     }
@@ -65,7 +64,7 @@ final class StudentGradesService
     ])]
     public function handleStudentGrades(string $studentId): array
     {
-        $grades = $this->gradeRepository->findGradesForStudentWithSubjectInfo($studentId);
+        $grades = $this->gradeFacade->findGradesForStudentWithSubjectInfo($studentId);
 
         $subjectsWithGrades = [];
         foreach ($grades as $grade) {
@@ -86,11 +85,12 @@ final class StudentGradesService
                 'description' => $grade['gradeDescription'],
                 'createdAt' => $grade['gradeCreatedAt'],
                 'updatedAt' => $grade['gradeUpdatedAt'],
+                'assignedBy' => sprintf('%s %s', $grade['teacherFirstName'], $grade['teacherLastName']),
             ];
         }
 
         foreach ($subjectsWithGrades as &$subject) {
-            $average = $this->gradeWeightedAverageService->count($subject['grades']);
+            $average = $this->gradeFacade->countGradeAverage($subject['grades']);
             $subject['average'] = $average;
         }
 

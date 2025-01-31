@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Grade\Query;
+namespace App\Modules\Student\Query;
 
-use App\Modules\Grade\Service\StudentGradesService;
+use App\Modules\Student\Service\StudentGradesService;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final class StudentGradesQuery

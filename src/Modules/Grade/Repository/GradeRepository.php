@@ -80,9 +80,13 @@ select g.id as gradeId,
        g.created_at as gradeCreatedAt,
        g.updated_at as gradeUpdatedAt,
        s.id as subjectId,
-       s.name as subjectName
+       s.name as subjectName,
+       u.first_name as teacherFirstName,
+       u.last_name as teacherLastName
 from grade g
 join subject s on s.id = g.subject_id
+join teacher t on t.id = g.teacher_id
+join user u on u.id = t.user_id
 where student_id = :studentId
 SQL;
 

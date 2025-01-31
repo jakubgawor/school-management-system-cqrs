@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Student\Controller;
 
-use App\Modules\Grade\Query\StudentGradesQuery;
+use App\Modules\Student\Query\GetMyGradesQuery;
 use App\Modules\Student\Query\StudentDetailsQuery;
+use App\Modules\Student\Query\StudentGradesQuery;
 use App\Modules\Student\Query\StudentsListQuery;
 use App\Modules\Student\Request\V1\RemoveStudentClassRoom as RemoveStudentClassRoomRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
@@ -223,5 +224,43 @@ final class StudentController extends AbstractController
     public function getStudentGrades(string $studentId, StudentGradesQuery $query): Response
     {
         return new JsonResponse($query->execute($studentId));
+    }
+
+    #[Get(
+        summary: 'Returns current logged student grades list with subject info',
+        tags: ['Student', 'v1'],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Returns current logged student grades list with subject info',
+                content: new JsonContent(
+                    properties: [
+                        new Property(property: 'average', type: 'float'),
+                        new Property(
+                            property: 'grades',
+                            type: 'array',
+                            items: new Items(
+                                properties: [
+                                    new Property(property: 'id', type: 'string', format: 'uuid'),
+                                    new Property(property: 'grade', type: 'string'),
+                                    new Property(property: 'weight', type: 'integer'),
+                                    new Property(property: 'description', type: 'string'),
+                                    new Property(property: 'createdAt', type: 'string'),
+                                    new Property(property: 'updatedAt', type: 'string'),
+                                    new Property(property: 'teacherFirstName', type: 'string'),
+                                    new Property(property: 'teacherLastName', type: 'string'),
+                                ]
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+        ]
+    )]
+    #[IsGranted('EXACT_ROLE_STUDENT')]
+    #[Route('/api/v1/student/my_grades', name: 'v1.student.my_grades', methods: ['GET'])]
+    public function getMyGrades(GetMyGradesQuery $query): Response
+    {
+        return new JsonResponse($query->execute());
     }
 }
