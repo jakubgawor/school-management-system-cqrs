@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\ClassRoom\Event;
+namespace App\Modules\ClassRoom\Command\ASync;
 
-final readonly class StudentAddedToClassRoom
+use App\Shared\Command\Async\Command;
+
+final readonly class StudentAddedToClassRoom implements Command
 {
     public function __construct(
         public string $classRoomId,

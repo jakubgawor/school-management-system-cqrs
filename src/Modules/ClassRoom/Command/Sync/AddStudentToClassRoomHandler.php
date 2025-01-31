@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Modules\ClassRoom\Command\Sync;
 
-use App\Modules\ClassRoom\Event\StudentAddedToClassRoom;
+use App\Modules\ClassRoom\Command\ASync\StudentAddedToClassRoom;
 use App\Modules\ClassRoom\Exception\ClassRoomDoesNotExist;
 use App\Modules\ClassRoom\Exception\ClassRoomOverflow;
 use App\Modules\ClassRoom\Repository\ClassRoomRepository;
+use App\Shared\Command\Async\CommandBus as ASyncCommandBus;
 use App\Shared\Command\Sync\CommandHandler;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class AddStudentToClassRoomHandler implements CommandHandler
 {
     public function __construct(
-        private EventDispatcherInterface $eventDispatcher,
         private ClassRoomRepository $classRoomRepository,
+        private ASyncCommandBus $asyncCommandBus,
     ) {
     }
 
@@ -30,6 +30,6 @@ final class AddStudentToClassRoomHandler implements CommandHandler
             throw new ClassRoomOverflow();
         }
 
-        $this->eventDispatcher->dispatch(new StudentAddedToClassRoom($command->classRoomId, $command->studentId));
+        $this->asyncCommandBus->dispatch(new StudentAddedToClassRoom($command->classRoomId, $command->studentId));
     }
 }
