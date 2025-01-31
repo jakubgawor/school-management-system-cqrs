@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Teacher\Facade;
 
+use App\Modules\Teacher\Entity\Teacher;
 use App\Modules\Teacher\Repository\TeacherRepository;
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -30,5 +31,10 @@ final class TeacherFacade
         }
 
         return $map;
+    }
+
+    public function findTeacherByUserId(string $userId): Teacher
+    {
+        return $this->teacherRepository->findByUserId($userId);
     }
 }

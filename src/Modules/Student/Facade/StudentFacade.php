@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Student\Facade;
 
+use App\Modules\Student\Entity\Student;
+use App\Modules\Student\Exception\StudentDoesNotExist;
 use App\Modules\Student\Repository\StudentRepository;
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -25,5 +27,16 @@ final class StudentFacade
         }
 
         return $map;
+    }
+
+    public function findStudentByIdOrFail(string $id): Student
+    {
+        $student = $this->studentRepository->findStudentById($id);
+
+        if (! $student) {
+            throw new StudentDoesNotExist();
+        }
+
+        return $student;
     }
 }

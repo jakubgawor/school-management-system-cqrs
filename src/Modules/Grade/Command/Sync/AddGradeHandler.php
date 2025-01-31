@@ -7,11 +7,9 @@ namespace App\Modules\Grade\Command\Sync;
 use App\Modules\Grade\Entity\Grade;
 use App\Modules\Grade\Exception\TeacherCanNotAssignGradeForSubject;
 use App\Modules\Grade\Repository\GradeRepository;
-use App\Modules\Student\Exception\StudentDoesNotExist;
-use App\Modules\Student\Repository\StudentRepository;
-use App\Modules\Subject\Exception\SubjectDoesNotExist;
-use App\Modules\Subject\Repository\SubjectRepository;
-use App\Modules\Teacher\Repository\TeacherRepository;
+use App\Modules\Student\Facade\StudentFacade;
+use App\Modules\Subject\Facade\SubjectFacade;
+use App\Modules\Teacher\Facade\TeacherFacade;
 use App\Shared\Command\Sync\CommandHandler;
 use App\Shared\Ramsey\IdGenerator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -19,27 +17,22 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 final class AddGradeHandler implements CommandHandler
 {
     public function __construct(
-        private StudentRepository $studentRepository,
-        private SubjectRepository $subjectRepository,
+        private StudentFacade $studentFacade,
+        private SubjectFacade $subjectFacade,
+        private TeacherFacade $teacherFacade,
         private TokenStorageInterface $tokenStorage,
-        private TeacherRepository $teacherRepository,
         private GradeRepository $gradeRepository,
     ) {
     }
 
     public function __invoke(AddGrade $command): void
     {
-        if (! $this->studentRepository->findStudentById($command->studentId)) {
-            throw new StudentDoesNotExist();
-        }
+        $this->studentFacade->findStudentByIdOrFail($command->studentId);
+        $this->subjectFacade->findSubjectByIdOrFail($command->subjectId);
 
-        if (! $this->subjectRepository->findSubjectById($command->subjectId)) {
-            throw new SubjectDoesNotExist();
-        }
+        $teacher = $this->teacherFacade->findTeacherByUserId($this->tokenStorage->getToken()->getUser()->getId());
 
-        $teacher = $this->teacherRepository->findByUserId($this->tokenStorage->getToken()->getUser()->getId());
-
-        if ($this->subjectRepository->findSubjectById($command->subjectId)->getTeacherId() !== $teacher->getId()) {
+        if ($this->subjectFacade->findSubjectByIdOrFail($command->subjectId)->getTeacherId() !== $teacher->getId()) {
             throw new TeacherCanNotAssignGradeForSubject();
         }
 
