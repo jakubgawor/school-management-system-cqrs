@@ -13,12 +13,15 @@ use App\Shared\Exception\BaseException;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
 use OpenApi\Attributes\Delete;
+use OpenApi\Attributes\Get;
+use OpenApi\Attributes\Items;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Patch;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
+use OpenApi\Attributes\Response as OAResponse;
 use OpenApi\Attributes\Schema;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -138,6 +141,47 @@ final class AnnouncementController extends AbstractController
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 
+    #[Get(
+        summary: 'Get list of announcements',
+        tags: ['Announcement', 'v1'],
+        responses: [
+            new OAResponse(
+                response: 200,
+                description: 'Returns list of announcements',
+                content: new JsonContent(
+                    properties: [
+                        new Property(
+                            property: 'id',
+                            description: 'Announcement ID',
+                            type: 'string',
+                            format: 'uuid'
+                        ),
+                        new Property(
+                            property: 'title',
+                            description: 'Title of announcement',
+                            type: 'string',
+                        ),
+                        new Property(
+                            property: 'message',
+                            description: 'Announcement message',
+                            type: 'string',
+                        ),
+                        new Property(
+                            property: 'createdAt',
+                            description: 'Announcement created at',
+                            type: 'string',
+                        ),
+                        new Property(
+                            property: 'updatedAt',
+                            description: 'Announcement updated at',
+                            type: 'string',
+                        ),
+                    ],
+                    type: 'object'
+                ),
+            ),
+        ]
+    )]
     #[Route('/api/v1/announcements', name: 'v1.announcement.announcements', methods: ['GET'])]
     public function getAnnouncements(GetAnnouncementsQuery $query): Response
     {
