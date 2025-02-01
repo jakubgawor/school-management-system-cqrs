@@ -33,3 +33,9 @@ grade:
         path: ../src/Modules/Grade/Controller/
         namespace: App\Modules\Grade\Controller
     type: attribute
+
+announcement:
+    resource:
+        path: ../src/Modules/Announcement/Controller/
+        namespace: App\Modules\Announcement\Controller
+    type: attribute

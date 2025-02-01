@@ -49,6 +49,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Modules/Grade/Entity'
                 prefix: 'App\Modules\Grade\Entity'
                 alias: App
+            Announcement:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Modules/Announcement/Entity'
+                prefix: 'App\Modules\Announcement\Entity'
+                alias: App
         controller_resolver:
             auto_mapping: false
 

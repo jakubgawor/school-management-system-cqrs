@@ -1,0 +1,23 @@
+App\Modules\Announcement\Request\V1\CreateNewAnnouncement:
+  properties:
+    title:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Length:
+          min: 3
+          max: 256
+          minMessage: 'VALIDATION.TOO_SHORT'
+          maxMessage: 'VALIDATION.TOO_LONG'
+    message:
+      - NotBlank:
+          message: 'VALIDATION.MISSING'
+      - Type:
+          type: string
+          message: 'VALIDATION.INVALID_FORMAT'
+      - Length:
+          min: 3
+          max: 4096
+          exactMessage: 'VALIDATION.INVALID_TOKEN_LENGTH'
