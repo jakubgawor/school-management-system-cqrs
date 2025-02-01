@@ -14,7 +14,6 @@ use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
 use OpenApi\Attributes\Delete;
 use OpenApi\Attributes\Get;
-use OpenApi\Attributes\Items;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Patch;

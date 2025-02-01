@@ -14,6 +14,16 @@ final class UserRepository
     ) {
     }
 
+    public function getAllUserEmails(): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('u.email')
+            ->from(User::class, 'u')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findById(string $id): ?User
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
