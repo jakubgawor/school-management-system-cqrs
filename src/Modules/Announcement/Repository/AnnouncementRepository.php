@@ -23,4 +23,9 @@ final class AnnouncementRepository
     {
         return $this->entityManager->find(Announcement::class, $id);
     }
+
+    public function remove(Announcement $announcement): void
+    {
+        $this->entityManager->remove($announcement);
+    }
 }
