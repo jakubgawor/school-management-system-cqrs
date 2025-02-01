@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Announcement\Controller;
 
 use App\Modules\Announcement\Command\Sync\RemoveAnnouncement;
+use App\Modules\Announcement\Query\GetAnnouncementsQuery;
 use App\Modules\Announcement\Request\V1\CreateNewAnnouncement as CreateNewAnnouncementRequestV1;
 use App\Modules\Announcement\Request\V1\EditAnnouncement as EditAnnouncementRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
@@ -135,5 +136,11 @@ final class AnnouncementController extends AbstractController
         }
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/api/v1/announcements', name: 'v1.announcement.announcements', methods: ['GET'])]
+    public function getAnnouncements(GetAnnouncementsQuery $query): Response
+    {
+        return new JsonResponse($query->execute());
     }
 }

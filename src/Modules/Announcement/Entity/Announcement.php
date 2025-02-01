@@ -27,7 +27,7 @@ class Announcement
     private DateTimeImmutable $createdAt;
 
     #[Column(type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $updatedAt;
+    private ?DateTimeImmutable $updatedAt;
 
     public function __construct(
         string $id,
@@ -74,15 +74,15 @@ class Announcement
         return $this->createdAt;
     }
 
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
+    public function getUpdatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
     }
 }

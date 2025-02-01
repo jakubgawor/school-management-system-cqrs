@@ -28,4 +28,15 @@ final class AnnouncementRepository
     {
         $this->entityManager->remove($announcement);
     }
+
+    public function getAll(): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('a')
+            ->from(Announcement::class, 'a')
+            ->orderBy('a.createdAt', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
 }
