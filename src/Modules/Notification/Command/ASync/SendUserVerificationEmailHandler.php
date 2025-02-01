@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\User\Command\ASync;
+namespace App\Modules\Notification\Command\ASync;
 
-use App\Modules\User\Mailer\UserVerificationMailer;
+use App\Modules\Notification\Mailer\UserVerificationMailer;
+use App\Modules\User\Command\ASync\SendUserVerificationEmail;
 use App\Shared\Command\Async\CommandHandler;
 
 final class SendUserVerificationEmailHandler implements CommandHandler

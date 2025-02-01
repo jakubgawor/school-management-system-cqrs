@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\User\Mailer;
+namespace App\Modules\Notification\Mailer;
 
 use App\Shared\Mailer\Email;
 use App\Shared\Mailer\MailerInterface;
