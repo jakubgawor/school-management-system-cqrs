@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Notification\Command\ASync;
+namespace App\Modules\Announcement\Command\ASync;
 
-use App\Modules\Announcement\Command\ASync\AnnouncementCreated;
-use App\Modules\Notification\Mailer\AnnouncementCreatedMailer;
 use App\Modules\User\Facade\UserFacade;
+use App\Shared\Command\Async\CommandBus as ASyncCommandBus;
 use App\Shared\Command\Async\CommandHandler;
 
 final class AnnouncementCreatedHandler implements CommandHandler
 {
     public function __construct(
-        private AnnouncementCreatedMailer $announcementCreatedMailer,
         private UserFacade $userFacade,
+        private ASyncCommandBus $asyncCommandBus,
     ) {
     }
 
@@ -22,7 +21,7 @@ final class AnnouncementCreatedHandler implements CommandHandler
         $emails = $this->userFacade->getAllUserEmails();
 
         foreach ($emails as $email) {
-            $this->announcementCreatedMailer->sendAnnouncementNotification($email['email'], $command->title);
+            $this->asyncCommandBus->dispatch(new SendUserAnnouncementNotification($email['email'], $command->title));
         }
     }
 }
