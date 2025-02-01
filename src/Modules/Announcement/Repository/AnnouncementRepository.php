@@ -18,4 +18,9 @@ final class AnnouncementRepository
     {
         $this->entityManager->persist($announcement);
     }
+
+    public function findById(string $id): ?Announcement
+    {
+        return $this->entityManager->find(Announcement::class, $id);
+    }
 }

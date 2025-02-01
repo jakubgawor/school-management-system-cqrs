@@ -45,9 +45,23 @@ class Announcement
         return $this->id;
     }
 
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function setMessage(string $message): self
+    {
+        $this->message = $message;
+
+        return $this;
     }
 
     public function getMessage(): string
