@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace App\Modules\User\Controller;
 
 use App\Modules\User\Exception\CannotChangeOwnActivation;
-use App\Modules\User\Exception\CannotChangeOwnRole;
 use App\Modules\User\Exception\EmailAlreadyUsed;
 use App\Modules\User\Exception\PasswordsDoNotMatch;
-use App\Modules\User\Exception\RoleAlreadyAssigned;
 use App\Modules\User\Exception\TokenCooldownViolation;
 use App\Modules\User\Exception\TokenDoesNotExists;
 use App\Modules\User\Exception\TokenExpired;
 use App\Modules\User\Exception\UserAlreadyExists;
-use App\Modules\User\Exception\UserNotActivated;
 use App\Modules\User\Exception\UserNotFound;
 use App\Modules\User\Query\GetUserBasicInfoQuery;
 use App\Modules\User\Query\UsersListQuery;
@@ -27,6 +24,7 @@ use App\Modules\User\Request\V1\ResendVerificationCode as ResendVerificationCode
 use App\Modules\User\Request\V1\UserRegister as UserRegisterRequestV1;
 use App\Modules\User\Request\V1\VerifyEmail as VerifyEmailRequestV1;
 use App\Shared\Command\Sync\CommandBus as SyncCommandBus;
+use App\Shared\Exception\BaseException;
 use App\Shared\Request\Validator\RequestValidator;
 use App\Shared\Request\Validator\ValidationError;
 use Nelmio\ApiDocBundle\Attribute\Security;
@@ -371,7 +369,7 @@ final class UserController extends AbstractController
 
         try {
             $this->syncCommandBus->dispatch($request->toCommand());
-        } catch (UserNotFound|RoleAlreadyAssigned|CannotChangeOwnRole|UserNotActivated $exception) {
+        } catch (BaseException $exception) {
             throw new ValidationError([
                 ValidationError::VALIDATION => [$exception->getValidationKey()],
             ]);

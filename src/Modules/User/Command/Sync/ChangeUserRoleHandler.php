@@ -9,6 +9,7 @@ use App\Modules\User\Exception\CannotChangeOwnRole;
 use App\Modules\User\Exception\RoleAlreadyAssigned;
 use App\Modules\User\Exception\UserNotActivated;
 use App\Modules\User\Repository\UserRepository;
+use App\Modules\User\Security\Validator\UserRoleValidator;
 use App\Modules\User\Service\UserFetcherService;
 use App\Shared\Command\Async\CommandBus as ASyncCommandBus;
 use App\Shared\Command\Sync\CommandHandler;
@@ -21,6 +22,7 @@ class ChangeUserRoleHandler implements CommandHandler
         private UserFetcherService $userFetcherService,
         private TokenStorageInterface $tokenStorage,
         private ASyncCommandBus $asyncCommandBus,
+        private UserRoleValidator $userRoleValidator,
     ) {
     }
 
@@ -39,6 +41,9 @@ class ChangeUserRoleHandler implements CommandHandler
         if (in_array($command->role, $user->getRoles(), true)) {
             throw new RoleAlreadyAssigned();
         }
+
+        $this->userRoleValidator->validateTeacherRole($user);
+        $this->userRoleValidator->validateStudentRole($user);
 
         $oldRole = $user->getRoles()[0];
         $newRole = strtoupper($command->role);

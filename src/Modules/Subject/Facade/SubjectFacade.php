@@ -25,4 +25,9 @@ final class SubjectFacade
 
         return $subject;
     }
+
+    public function isTeacherAssignedToSubject(string $teacherId): bool
+    {
+        return $this->subjectRepository->countSubjectsByTeacherId($teacherId) !== 0;
+    }
 }

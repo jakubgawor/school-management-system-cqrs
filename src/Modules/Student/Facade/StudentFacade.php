@@ -39,4 +39,9 @@ final class StudentFacade
 
         return $student;
     }
+
+    public function findStudentByUserId(string $userId): ?Student
+    {
+        return $this->studentRepository->findByUserId($userId);
+    }
 }
