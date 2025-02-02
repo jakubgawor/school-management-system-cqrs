@@ -130,6 +130,10 @@ final class StudentRepository
             ->getQuery()
             ->getArrayResult();
 
+        if (empty($rows)) {
+            return [];
+        }
+
         $studentFirstName = $rows[0]['userFirstName'];
         $studentLastName = $rows[0]['userLastName'];
         $studentClassRoomId = $rows[0]['classRoomId'];
