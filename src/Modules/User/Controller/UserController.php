@@ -425,17 +425,12 @@ final class UserController extends AbstractController
                                     new Property(property: 'firstName', type: 'string'),
                                     new Property(property: 'lastName', type: 'string'),
                                     new Property(property: 'email', type: 'string'),
-                                    new Property(
-                                        property: 'createdAt',
-                                        properties: [
-                                            new Property(property: 'date', type: 'string', format: 'date-time'),
-                                            new Property(property: 'timezone_type', type: 'integer', example: 3),
-                                            new Property(property: 'timezone', type: 'string', example: 'UTC'),
-                                        ],
-                                        type: 'object'
-                                    ),
+                                    new Property(property: 'createdAt', type: 'string'),
                                     new Property(property: 'isVerified', type: 'boolean'),
+                                    new Property(property: 'isActivated', type: 'boolean'),
                                     new Property(property: 'role', type: 'string', example: 'ROLE_ADMIN'),
+                                    new Property(property: 'teacherId', type: 'string', format: 'uuid', nullable: true),
+                                    new Property(property: 'studentId', type: 'string', format: 'uuid', nullable: true),
                                 ]
                             ),
                         ),

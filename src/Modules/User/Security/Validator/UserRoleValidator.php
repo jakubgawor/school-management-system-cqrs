@@ -35,7 +35,7 @@ final class UserRoleValidator
     {
         if ($user->getRoles()[0] === Role::STUDENT->value) {
             $student = $this->studentFacade->findStudentByUserId($user->getId());
-            if (! empty($student->getClassRoomId())) {
+            if (! empty($student?->getClassRoomId())) {
                 throw new StudentIsAssignedToClassRoom();
             }
         }

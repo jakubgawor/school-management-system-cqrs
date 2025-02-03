@@ -44,7 +44,7 @@ class UserVerificationToken
         string $id,
         User $user,
         string $token,
-        TOkenType $type,
+        TokenType $type,
     ) {
         $this->id = $id;
         $this->user = $user;
